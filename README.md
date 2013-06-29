@@ -2,8 +2,12 @@
 
 The worked example for chapter 14 of
 [Quality Code: Software Testing Principles, Practices, and Patterns](http://www.informit.com/store/product.aspx?isbn=9780321832986 "Quality Code").
+This project is a test-driven Java application.
 
 ## The Specification
+
+WebRetriever is a functional subset of the [curl(1)](http://curl.haxx.se/docs/manpage.html "curl manpage") command.
+References to options in the below specification refer to the corresponding option in the curl documentation.
 
 ### Features
 
