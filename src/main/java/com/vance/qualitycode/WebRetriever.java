@@ -1,8 +1,6 @@
 package com.vance.qualitycode;
 
-public class WebRetriever 
-{
-    public static void main( String[] args )
-    {
+public class WebRetriever {
+    public static void main(String[] args) {
     }
 }

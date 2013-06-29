@@ -1,13 +1,12 @@
 package com.vance.qualitycode;
 
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
-public class WebRetrieverTest 
-{
+public class WebRetrieverTest {
     @Test
-    public void testWebRetriever()
-    {
+    public void testWebRetriever() {
         assertNotNull(new WebRetriever());
     }
 }
