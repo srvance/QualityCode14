@@ -8,5 +8,6 @@ public class WebRetrieverTest
     @Test
     public void testWebRetriever()
     {
+        assertNotNull(new WebRetriever());
     }
 }
