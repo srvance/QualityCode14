@@ -4,14 +4,16 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 public class WebRetrieverTest {
     @Test
     public void testWebRetriever() {
         WebRetriever sut = new WebRetriever();
 
-        assertNotNull(sut);
+        assertThat(sut, notNullValue());
     }
 
     @Test
@@ -20,7 +22,7 @@ public class WebRetrieverTest {
 
         String content = sut.retrieve("http://www.example.com");
 
-        assertNotNull(content);
-        assertTrue(content.contains("<html>"));
+        assertThat(content, notNullValue());
+        assertThat(content, containsString("<html>"));
     }
 }
