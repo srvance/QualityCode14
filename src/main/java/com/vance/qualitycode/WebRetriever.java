@@ -17,16 +17,21 @@ public class WebRetriever {
 
     public String retrieve(String URI) throws IOException {
         HttpResponse response = retrieveResponse(URI);
-        HttpEntity entity = response.getEntity();
-        InputStream content = entity.getContent();
-        StringWriter writer = new StringWriter();
-        IOUtils.copy(content, writer);
-        return writer.toString();
+
+        return extractContentFromResponse(response);
     }
 
     protected HttpResponse retrieveResponse(String URI) throws IOException {
         HttpClient httpClient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(URI);
         return httpClient.execute(httpGet);
+    }
+
+    protected String extractContentFromResponse(HttpResponse response) throws IOException {
+        HttpEntity entity = response.getEntity();
+        InputStream content = entity.getContent();
+        StringWriter writer = new StringWriter();
+        IOUtils.copy(content, writer);
+        return writer.toString();
     }
 }
