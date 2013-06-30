@@ -5,6 +5,6 @@ public class WebRetriever {
     }
 
     public String retrieve(String URI) {
-        return null;
+        return "";
     }
 }
