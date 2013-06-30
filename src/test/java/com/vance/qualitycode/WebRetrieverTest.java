@@ -5,6 +5,7 @@ import org.apache.http.HttpResponse;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -25,6 +26,7 @@ public class WebRetrieverTest {
         final HttpResponse response = EasyMock.createMock(HttpResponse.class);
         HttpEntity entity = EasyMock.createMock(HttpEntity.class);
         EasyMock.expect(response.getEntity()).andReturn(entity);
+        EasyMock.expect(entity.getContent()).andReturn(new ByteArrayInputStream("<html><title>Example Domain</title>".getBytes()));
         EasyMock.replay(response, entity);
         WebRetriever sut = new WebRetriever() {
             @Override
