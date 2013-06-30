@@ -14,8 +14,6 @@ import static org.junit.Assert.assertThat;
 
 public class WebRetrieverTest {
 
-    private final String expectedContent = "This is the content we expect back from the response";
-
     @Test
     public void testWebRetriever() {
         WebRetriever sut = new WebRetriever();
@@ -25,11 +23,11 @@ public class WebRetrieverTest {
 
     @Test
     public void testRetrieve_SingleURI() throws IOException {
-
+        final String expectedContent = "This is one set of content";
         WebRetriever sut = new WebRetriever() {
             @Override
             protected HttpResponse retrieveResponse(String URI) throws IOException {
-                return createMockResponse();
+                return createMockResponse(expectedContent);
             }
         };
 
@@ -41,14 +39,15 @@ public class WebRetrieverTest {
 
     @Test
     public void testExtractContentFromResponse() throws IOException {
+        String expectedContent = "This is another set of content";
         WebRetriever sut = new WebRetriever();
 
-        String content = sut.extractContentFromResponse(createMockResponse());
+        String content = sut.extractContentFromResponse(createMockResponse(expectedContent));
 
         assertThat(content, is(expectedContent));
     }
 
-    private HttpResponse createMockResponse() throws IOException {
+    private HttpResponse createMockResponse(String expectedContent) throws IOException {
         final HttpResponse response = EasyMock.createMock(HttpResponse.class);
         HttpEntity entity = EasyMock.createMock(HttpEntity.class);
         EasyMock.expect(response.getEntity()).andReturn(entity);
