@@ -17,5 +17,6 @@ public class WebRetrieverTest {
         String content = sut.retrieve("http://www.example.com");
 
         assertNotNull(content);
+        assertTrue(content.contains("<html>"));
     }
 }
