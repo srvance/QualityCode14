@@ -8,16 +8,13 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 public class WebRetrieverTest {
 
-    private final String expectedUbiquitousTag = "<html>";
-    private final String expectedTitleTag = "<title>Example Domain</title>";
-    private final String expectedContent = expectedUbiquitousTag + expectedTitleTag;
+    private final String expectedContent = "This is the content we expect back from the response";
 
     @Test
     public void testWebRetriever() {
@@ -39,6 +36,15 @@ public class WebRetrieverTest {
         String content = sut.retrieve("http://www.example.com");
 
         assertThat(content, notNullValue());
+        assertThat(content, is(expectedContent));
+    }
+
+    @Test
+    public void testExtractContentFromResponse() throws IOException {
+        WebRetriever sut = new WebRetriever();
+
+        String content = sut.extractContentFromResponse(createMockResponse());
+
         assertThat(content, is(expectedContent));
     }
 
