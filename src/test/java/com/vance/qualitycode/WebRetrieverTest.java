@@ -9,6 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -38,8 +39,7 @@ public class WebRetrieverTest {
         String content = sut.retrieve("http://www.example.com");
 
         assertThat(content, notNullValue());
-        assertThat(content, containsString(expectedUbiquitousTag));
-        assertThat(content, containsString(expectedTitleTag));
+        assertThat(content, is(expectedContent));
     }
 
     private HttpResponse createMockResponse() throws IOException {
