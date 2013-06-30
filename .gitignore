@@ -7,3 +7,6 @@
 
 # IDE Files #
 *.iml
+
+# Maven #
+target
