@@ -13,6 +13,11 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 public class WebRetrieverTest {
+
+    private final String expectedUbiquitousTag = "<html>";
+    private final String expectedTitleTag = "<title>Example Domain</title>";
+    private final String expectedContent = expectedUbiquitousTag + expectedTitleTag;
+
     @Test
     public void testWebRetriever() {
         WebRetriever sut = new WebRetriever();
@@ -22,15 +27,8 @@ public class WebRetrieverTest {
 
     @Test
     public void testRetrieve_SingleURI() throws IOException {
-        String expectedUbiquitousTag = "<html>";
-        String expectedTitleTag = "<title>Example Domain</title>";
-        String expectedContent = expectedUbiquitousTag + expectedTitleTag;
 
-        final HttpResponse response = EasyMock.createMock(HttpResponse.class);
-        HttpEntity entity = EasyMock.createMock(HttpEntity.class);
-        EasyMock.expect(response.getEntity()).andReturn(entity);
-        EasyMock.expect(entity.getContent()).andReturn(new ByteArrayInputStream(expectedContent.getBytes()));
-        EasyMock.replay(response, entity);
+        final HttpResponse response = createMockResponse();
         WebRetriever sut = new WebRetriever() {
             @Override
             protected HttpResponse retrieveResponse(String URI) throws IOException {
@@ -43,5 +41,14 @@ public class WebRetrieverTest {
         assertThat(content, notNullValue());
         assertThat(content, containsString(expectedUbiquitousTag));
         assertThat(content, containsString(expectedTitleTag));
+    }
+
+    private HttpResponse createMockResponse() throws IOException {
+        final HttpResponse response = EasyMock.createMock(HttpResponse.class);
+        HttpEntity entity = EasyMock.createMock(HttpEntity.class);
+        EasyMock.expect(response.getEntity()).andReturn(entity);
+        EasyMock.expect(entity.getContent()).andReturn(new ByteArrayInputStream(expectedContent.getBytes()));
+        EasyMock.replay(response, entity);
+        return response;
     }
 }
