@@ -22,7 +22,7 @@ public class WebRetriever {
         HttpEntity entity = response.getEntity();
         InputStream content = entity.getContent();
         StringWriter writer = new StringWriter();
-        IOUtils.copy(content, writer, entity.getContentEncoding().getValue());
+        IOUtils.copy(content, writer);
         return writer.toString();
     }
 }
