@@ -9,4 +9,11 @@ public class WebRetrieverTest {
     public void testWebRetriever() {
         assertNotNull(new WebRetriever());
     }
+
+    @Test
+    public void testRetrieve_SingleURI() {
+        WebRetriever sut = new WebRetriever();
+
+        String content = sut.retrieve("http://www.example.com");
+    }
 }
