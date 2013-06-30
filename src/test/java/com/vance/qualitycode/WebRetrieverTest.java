@@ -15,5 +15,7 @@ public class WebRetrieverTest {
         WebRetriever sut = new WebRetriever();
 
         String content = sut.retrieve("http://www.example.com");
+
+        assertNotNull(content);
     }
 }
