@@ -22,11 +22,14 @@ public class WebRetrieverTest {
 
     @Test
     public void testRetrieve_SingleURI() throws IOException {
+        String expectedUbiquitousTag = "<html>";
+        String expectedTitleTag = "<title>Example Domain</title>";
+        String expectedContent = expectedUbiquitousTag + expectedTitleTag;
 
         final HttpResponse response = EasyMock.createMock(HttpResponse.class);
         HttpEntity entity = EasyMock.createMock(HttpEntity.class);
         EasyMock.expect(response.getEntity()).andReturn(entity);
-        EasyMock.expect(entity.getContent()).andReturn(new ByteArrayInputStream("<html><title>Example Domain</title>".getBytes()));
+        EasyMock.expect(entity.getContent()).andReturn(new ByteArrayInputStream(expectedContent.getBytes()));
         EasyMock.replay(response, entity);
         WebRetriever sut = new WebRetriever() {
             @Override
@@ -38,7 +41,7 @@ public class WebRetrieverTest {
         String content = sut.retrieve("http://www.example.com");
 
         assertThat(content, notNullValue());
-        assertThat(content, containsString("<html>"));
-        assertThat(content, containsString("<title>Example Domain</title>"));
+        assertThat(content, containsString(expectedUbiquitousTag));
+        assertThat(content, containsString(expectedTitleTag));
     }
 }
