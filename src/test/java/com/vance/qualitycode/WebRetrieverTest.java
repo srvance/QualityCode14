@@ -24,5 +24,6 @@ public class WebRetrieverTest {
 
         assertThat(content, notNullValue());
         assertThat(content, containsString("<html>"));
+        assertThat(content, containsString("<title>Example Domain</title>"));
     }
 }
