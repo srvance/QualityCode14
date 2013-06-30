@@ -1,5 +1,6 @@
 package com.vance.qualitycode;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -20,8 +21,11 @@ public class WebRetrieverTest {
 
     @Test
     public void testRetrieve_SingleURI() throws IOException {
+
         final HttpResponse response = EasyMock.createMock(HttpResponse.class);
-        EasyMock.replay(response);
+        HttpEntity entity = EasyMock.createMock(HttpEntity.class);
+        EasyMock.expect(response.getEntity()).andReturn(entity);
+        EasyMock.replay(response, entity);
         WebRetriever sut = new WebRetriever() {
             @Override
             protected HttpResponse retrieveResponse(String URI) throws IOException {
