@@ -28,11 +28,10 @@ public class WebRetrieverTest {
     @Test
     public void testRetrieve_SingleURI() throws IOException {
 
-        final HttpResponse response = createMockResponse();
         WebRetriever sut = new WebRetriever() {
             @Override
             protected HttpResponse retrieveResponse(String URI) throws IOException {
-                return response;
+                return createMockResponse();
             }
         };
 
