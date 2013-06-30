@@ -9,7 +9,9 @@ import static org.junit.Assert.*;
 public class WebRetrieverTest {
     @Test
     public void testWebRetriever() {
-        assertNotNull(new WebRetriever());
+        WebRetriever sut = new WebRetriever();
+
+        assertNotNull(sut);
     }
 
     @Test
