@@ -16,6 +16,12 @@ import java.util.List;
 
 public class WebRetriever {
     public static void main(String[] args) {
+        WebRetriever retriever = new WebRetriever();
+        try {
+            System.out.println(retriever.retrieve(args));
+        } catch (IOException e) {
+            System.err.println("Houston, we have a problem.");
+        }
     }
 
     public String retrieve(String URI) throws IOException {
