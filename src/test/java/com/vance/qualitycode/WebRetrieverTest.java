@@ -38,7 +38,7 @@ public class WebRetrieverTest {
     }
 
     @Test
-    public void testRetrieve_MultipleURIs() {
+    public void testRetrieve_MultipleURIs() throws IOException {
         final String[] expectedContent = {
                 "The first site's content",
                 "The next site's content",
