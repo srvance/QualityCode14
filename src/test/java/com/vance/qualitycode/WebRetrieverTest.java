@@ -62,6 +62,15 @@ public class WebRetrieverTest {
     }
 
     @Test
+    public void testRetrieveResponse_DomainOnly() throws IOException {
+        WebRetriever sut = new WebRetriever();
+
+        HttpResponse response = sut.retrieveResponse("www.example.com");
+
+        assertThat(response, is(notNullValue()));
+    }
+
+    @Test
     public void testExtractContentFromResponse() throws IOException {
         String expectedContent = "This is another set of content";
         WebRetriever sut = new WebRetriever();
