@@ -89,6 +89,13 @@ public class WebRetrieverTest {
         assertThat(actualURI.getScheme(), is(equalTo(SCHEME_HTTP)));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testRetrieveResponse_NonHttpScheme() throws IOException, URISyntaxException {
+        WebRetrieverURISpy sut = new WebRetrieverURISpy();
+
+        sut.retrieveResponse("ftp://" + EXAMPLE_DOMAIN);
+    }
+
     @Test
     public void testExtractContentFromResponse() throws IOException {
         String expectedContent = "This is another set of content";
