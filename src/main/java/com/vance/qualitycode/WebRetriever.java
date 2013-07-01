@@ -34,4 +34,8 @@ public class WebRetriever {
         IOUtils.copy(content, writer);
         return writer.toString();
     }
+
+    public String retrieve(String[] URIs) {
+        return null;
+    }
 }
