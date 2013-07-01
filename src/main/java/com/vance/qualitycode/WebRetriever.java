@@ -32,6 +32,9 @@ public class WebRetriever {
 
     protected HttpResponse retrieveResponse(String URI) throws IOException, URISyntaxException {
         URI uri = new URI(URI);
+        if (uri.getHost() == null) {
+            uri = new URI("http://" + URI);
+        }
         return retrieveResponse(uri);
     }
 

@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -64,11 +65,13 @@ public class WebRetrieverTest {
 
     @Test
     public void testRetrieveResponse_DomainOnly() throws IOException, URISyntaxException {
-        WebRetriever sut = new WebRetriever();
+        WebRetrieverURISpy sut = new WebRetrieverURISpy();
 
-        HttpResponse response = sut.retrieveResponse("www.example.com");
+        sut.retrieveResponse("www.example.com");
 
-        assertThat(response, is(notNullValue()));
+        URI actualURI = sut.getSuppliedURI();
+        assertThat(actualURI.getHost(), is(equalTo("www.example.com")));
+        assertThat(actualURI.getScheme(), is(equalTo("http")));
     }
 
     @Test
@@ -88,5 +91,19 @@ public class WebRetrieverTest {
         EasyMock.expect(entity.getContent()).andReturn(new ByteArrayInputStream(expectedContent.getBytes()));
         EasyMock.replay(response, entity);
         return response;
+    }
+
+    private class WebRetrieverURISpy extends WebRetriever {
+        URI suppliedURI;
+
+        @Override
+        protected HttpResponse retrieveResponse(URI uri) throws IOException {
+            this.suppliedURI = uri;
+            return createMockResponse("");
+        }
+
+        public URI getSuppliedURI() {
+            return suppliedURI;
+        }
     }
 }
