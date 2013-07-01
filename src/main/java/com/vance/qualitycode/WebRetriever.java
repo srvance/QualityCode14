@@ -15,6 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WebRetriever {
+
+    private final HttpClient httpClient;
+
+    public WebRetriever() {
+        this.httpClient = new DefaultHttpClient();
+    }
+
     public static void main(String[] args) {
         WebRetriever retriever = new WebRetriever();
         try {
@@ -31,7 +38,6 @@ public class WebRetriever {
     }
 
     protected HttpResponse retrieveResponse(String URI) throws IOException {
-        HttpClient httpClient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(URI);
         return httpClient.execute(httpGet);
     }
