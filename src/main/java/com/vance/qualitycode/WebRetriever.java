@@ -11,6 +11,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,14 +24,19 @@ public class WebRetriever {
         this.httpClient = new DefaultHttpClient();
     }
 
-    public String retrieve(String URI) throws IOException {
+    public String retrieve(String URI) throws IOException, URISyntaxException {
         HttpResponse response = retrieveResponse(URI);
 
         return extractContentFromResponse(response);
     }
 
-    protected HttpResponse retrieveResponse(String URI) throws IOException {
-        HttpGet httpGet = new HttpGet(URI);
+    protected HttpResponse retrieveResponse(String URI) throws IOException, URISyntaxException {
+        URI uri = new URI(URI);
+        return retrieveResponse(uri);
+    }
+
+    protected HttpResponse retrieveResponse(URI uri) throws IOException {
+        HttpGet httpGet = new HttpGet(uri);
         return httpClient.execute(httpGet);
     }
 
@@ -41,7 +48,7 @@ public class WebRetriever {
         return writer.toString();
     }
 
-    public String retrieve(String[] URIs) throws IOException {
+    public String retrieve(String[] URIs) throws IOException, URISyntaxException {
         List<String> content = new ArrayList<String>(URIs.length);
 
         for (String URI : URIs) {
@@ -57,6 +64,10 @@ public class WebRetriever {
             System.out.println(retriever.retrieve(args));
         } catch (IOException e) {
             System.err.println("Houston, we have a problem.");
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            System.err.println("Bad URL!");
+            e.printStackTrace();
         }
     }
 }

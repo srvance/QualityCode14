@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -22,7 +23,7 @@ public class WebRetrieverTest {
     }
 
     @Test
-    public void testRetrieve_SingleURI() throws IOException {
+    public void testRetrieve_SingleURI() throws IOException, URISyntaxException {
         final String expectedContent = "This is one set of content";
         WebRetriever sut = new WebRetriever() {
             @Override
@@ -38,7 +39,7 @@ public class WebRetrieverTest {
     }
 
     @Test
-    public void testRetrieve_MultipleURIs() throws IOException {
+    public void testRetrieve_MultipleURIs() throws IOException, URISyntaxException {
         final String[] expectedContent = {
                 "The first site's content",
                 "The next site's content",
@@ -62,7 +63,7 @@ public class WebRetrieverTest {
     }
 
     @Test
-    public void testRetrieveResponse_DomainOnly() throws IOException {
+    public void testRetrieveResponse_DomainOnly() throws IOException, URISyntaxException {
         WebRetriever sut = new WebRetriever();
 
         HttpResponse response = sut.retrieveResponse("www.example.com");
