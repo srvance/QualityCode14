@@ -16,6 +16,10 @@ import static org.junit.Assert.assertThat;
 
 public class WebRetrieverTest {
 
+    public static final String SCHEME_HTTP = "http";
+    public static final String EXAMPLE_DOMAIN = "www.example.com";
+    public static final String EXAMPLE_URI = SCHEME_HTTP + "://" + EXAMPLE_DOMAIN;
+
     @Test
     public void testWebRetriever() {
         WebRetriever sut = new WebRetriever();
@@ -33,7 +37,7 @@ public class WebRetrieverTest {
             }
         };
 
-        String content = sut.retrieve("http://www.example.com");
+        String content = sut.retrieve(EXAMPLE_URI);
 
         assertThat(content, is(notNullValue()));
         assertThat(content, is(equalTo(expectedContent)));
@@ -67,22 +71,22 @@ public class WebRetrieverTest {
     public void testRetrieveResponse_SchemeDomain() throws IOException, URISyntaxException {
         WebRetrieverURISpy sut = new WebRetrieverURISpy();
 
-        sut.retrieveResponse("http://www.example.com");
+        sut.retrieveResponse(EXAMPLE_URI);
 
         URI actualURI = sut.getSuppliedURI();
-        assertThat(actualURI.getScheme(), is(equalTo("http")));
-        assertThat(actualURI.getHost(), is(equalTo("www.example.com")));
+        assertThat(actualURI.getScheme(), is(equalTo(SCHEME_HTTP)));
+        assertThat(actualURI.getHost(), is(equalTo(EXAMPLE_DOMAIN)));
     }
 
     @Test
     public void testRetrieveResponse_DomainOnly() throws IOException, URISyntaxException {
         WebRetrieverURISpy sut = new WebRetrieverURISpy();
 
-        sut.retrieveResponse("www.example.com");
+        sut.retrieveResponse(EXAMPLE_DOMAIN);
 
         URI actualURI = sut.getSuppliedURI();
-        assertThat(actualURI.getHost(), is(equalTo("www.example.com")));
-        assertThat(actualURI.getScheme(), is(equalTo("http")));
+        assertThat(actualURI.getHost(), is(equalTo(EXAMPLE_DOMAIN)));
+        assertThat(actualURI.getScheme(), is(equalTo(SCHEME_HTTP)));
     }
 
     @Test
