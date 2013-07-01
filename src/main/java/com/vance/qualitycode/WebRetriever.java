@@ -19,11 +19,7 @@ public class WebRetriever {
     private final HttpClient httpClient;
 
     public WebRetriever() {
-        this(new DefaultHttpClient());
-    }
-
-    private WebRetriever(HttpClient httpClient) {
-        this.httpClient = httpClient;
+        this.httpClient = new DefaultHttpClient();
     }
 
     public String retrieve(String URI) throws IOException {
