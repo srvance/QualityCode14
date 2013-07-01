@@ -40,6 +40,9 @@ public class WebRetriever {
         if (uri.getHost() == null) {
             uri = new URI("http://" + URI);
         }
+        if (!"http".equals(uri.getScheme())) {
+            throw new IllegalArgumentException("Only http scheme is valid at this time");
+        }
         return uri;
     }
 
