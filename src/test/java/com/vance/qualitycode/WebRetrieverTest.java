@@ -38,6 +38,29 @@ public class WebRetrieverTest {
     }
 
     @Test
+    public void testRetrieve_MultipleURIs() {
+        final String[] expectedContent = {
+                "The first site's content",
+                "The next site's content",
+                "The last site's content"
+        };
+
+        WebRetriever sut = new WebRetriever() {
+            int siteIndex = 0;
+
+            @Override
+            public String retrieve(String URI) throws IOException {
+                return expectedContent[siteIndex++];
+            }
+        };
+
+        String[] sites = {"site1", "site2", "site3"};
+        String allContent = sut.retrieve(sites);
+
+
+    }
+
+    @Test
     public void testExtractContentFromResponse() throws IOException {
         String expectedContent = "This is another set of content";
         WebRetriever sut = new WebRetriever();
