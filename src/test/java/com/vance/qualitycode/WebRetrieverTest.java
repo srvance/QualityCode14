@@ -44,6 +44,7 @@ public class WebRetrieverTest {
                 "The next site's content",
                 "The last site's content"
         };
+        String allExpectedContent = StringUtils.join(expectedContent, '\n');
 
         WebRetriever sut = new WebRetriever() {
             int siteIndex = 0;
@@ -57,7 +58,7 @@ public class WebRetrieverTest {
         String[] sites = {"site1", "site2", "site3"};
         String allContent = sut.retrieve(sites);
 
-        assertThat(allContent, is(equalTo(StringUtils.join(expectedContent, '\n'))));
+        assertThat(allContent, is(equalTo(allExpectedContent)));
     }
 
     @Test
