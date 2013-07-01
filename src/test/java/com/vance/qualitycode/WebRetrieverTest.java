@@ -1,5 +1,6 @@
 package com.vance.qualitycode;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.easymock.EasyMock;
@@ -8,8 +9,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class WebRetrieverTest {
@@ -57,7 +57,7 @@ public class WebRetrieverTest {
         String[] sites = {"site1", "site2", "site3"};
         String allContent = sut.retrieve(sites);
 
-
+        assertThat(allContent, equalTo(StringUtils.join(expectedContent, '\n')));
     }
 
     @Test

@@ -13,6 +13,7 @@ References to options in the below specification refer to the corresponding opti
 
 * Takes options followed by one or more URLs
 * Retrieves content from URLs and writes content to the terminal unless options say otherwise.
+* Multiple URLs' content to the same output will be separated by blank lines.
 * Supports http, defaulting to GET
 * Assumes http if not specified
 * Supports -O to write the file to the same local name
