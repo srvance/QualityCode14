@@ -31,11 +31,16 @@ public class WebRetriever {
     }
 
     protected HttpResponse retrieveResponse(String URI) throws IOException, URISyntaxException {
+        URI uri = rectifyURI(URI);
+        return retrieveResponse(uri);
+    }
+
+    private URI rectifyURI(String URI) throws URISyntaxException {
         URI uri = new URI(URI);
         if (uri.getHost() == null) {
             uri = new URI("http://" + URI);
         }
-        return retrieveResponse(uri);
+        return uri;
     }
 
     protected HttpResponse retrieveResponse(URI uri) throws IOException {
