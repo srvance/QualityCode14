@@ -18,7 +18,7 @@ public class WebRetrieverTest {
     public void testWebRetriever() {
         WebRetriever sut = new WebRetriever();
 
-        assertThat(sut, notNullValue());
+        assertThat(sut, is(notNullValue()));
     }
 
     @Test
@@ -33,8 +33,8 @@ public class WebRetrieverTest {
 
         String content = sut.retrieve("http://www.example.com");
 
-        assertThat(content, notNullValue());
-        assertThat(content, is(expectedContent));
+        assertThat(content, is(notNullValue()));
+        assertThat(content, is(equalTo(expectedContent)));
     }
 
     @Test
@@ -57,7 +57,7 @@ public class WebRetrieverTest {
         String[] sites = {"site1", "site2", "site3"};
         String allContent = sut.retrieve(sites);
 
-        assertThat(allContent, equalTo(StringUtils.join(expectedContent, '\n')));
+        assertThat(allContent, is(equalTo(StringUtils.join(expectedContent, '\n'))));
     }
 
     @Test
@@ -67,7 +67,7 @@ public class WebRetrieverTest {
 
         String content = sut.extractContentFromResponse(createMockResponse(expectedContent));
 
-        assertThat(content, is(expectedContent));
+        assertThat(content, is(equalTo(expectedContent)));
     }
 
     private HttpResponse createMockResponse(String expectedContent) throws IOException {
