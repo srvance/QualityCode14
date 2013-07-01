@@ -64,6 +64,17 @@ public class WebRetrieverTest {
     }
 
     @Test
+    public void testRetrieveResponse_SchemeDomain() throws IOException, URISyntaxException {
+        WebRetrieverURISpy sut = new WebRetrieverURISpy();
+
+        sut.retrieveResponse("http://www.example.com");
+
+        URI actualURI = sut.getSuppliedURI();
+        assertThat(actualURI.getScheme(), is(equalTo("http")));
+        assertThat(actualURI.getHost(), is(equalTo("www.example.com")));
+    }
+
+    @Test
     public void testRetrieveResponse_DomainOnly() throws IOException, URISyntaxException {
         WebRetrieverURISpy sut = new WebRetrieverURISpy();
 
