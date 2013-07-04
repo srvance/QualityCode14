@@ -106,6 +106,24 @@ public class WebRetrieverTest {
         assertThat(content, is(equalTo(expectedContent)));
     }
 
+    @Test
+    public void testRetrieve_SingleURLOutputToFile() throws IOException, URISyntaxException {
+        String[] args = {"-O", EXAMPLE_URI};
+        WebRetriever sut = new WebRetriever() {
+            int retrieveCount = 0;
+
+            @Override
+            public String retrieve(String URI) throws IOException, URISyntaxException {
+                assertThat(++retrieveCount, is(equalTo(1)));
+                return super.retrieve(URI);
+            }
+        };
+
+        String content = sut.retrieve(args);
+
+        assertThat(content, is(notNullValue()));
+    }
+
     private HttpResponse createMockResponse(String expectedContent) throws IOException {
         final HttpResponse response = EasyMock.createMock(HttpResponse.class);
         HttpEntity entity = EasyMock.createMock(HttpEntity.class);
