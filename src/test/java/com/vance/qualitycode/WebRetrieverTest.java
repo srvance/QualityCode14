@@ -108,6 +108,7 @@ public class WebRetrieverTest {
 
     @Test
     public void testRetrieve_SingleURLOutputToFile() throws IOException, URISyntaxException {
+        final String expectedContent = "This content should go to a file";
         String[] args = {"-O", EXAMPLE_URI};
         WebRetriever sut = new WebRetriever() {
             int retrieveCount = 0;
@@ -116,6 +117,11 @@ public class WebRetrieverTest {
             public String retrieve(String URI) throws IOException, URISyntaxException {
                 assertThat(++retrieveCount, is(equalTo(1)));
                 return super.retrieve(URI);
+            }
+
+            @Override
+            protected HttpResponse retrieveResponse(URI uri) throws IOException {
+                return createMockResponse(expectedContent);
             }
         };
 
