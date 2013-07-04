@@ -121,7 +121,7 @@ public class WebRetrieverTest {
 
         String content = sut.retrieve(args);
 
-        assertThat(content, is(notNullValue()));
+        assertThat(content, is(nullValue()));
     }
 
     private HttpResponse createMockResponse(String expectedContent) throws IOException {
