@@ -24,7 +24,7 @@ public class WebRetriever {
         this.httpClient = new DefaultHttpClient();
     }
 
-    public String retrieve(String URI) throws IOException, URISyntaxException {
+    public String retrieve(String URI, boolean writeToFile) throws IOException, URISyntaxException {
         HttpResponse response = retrieveResponse(URI);
 
         return extractContentFromResponse(response);
@@ -65,9 +65,15 @@ public class WebRetriever {
 
     public String retrieve(String[] URIs) throws IOException, URISyntaxException {
         List<String> content = new ArrayList<String>(URIs.length);
+        boolean writeToFile = false;
 
         for (String URI : URIs) {
-            content.add(retrieve(URI));
+            if ("-O".equals(URI)) {
+                writeToFile = true;
+                continue;
+            }
+            content.add(retrieve(URI, writeToFile));
+            writeToFile = false;
         }
 
         return StringUtils.join(content, '\n');
