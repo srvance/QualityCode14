@@ -1,6 +1,5 @@
 package com.vance.qualitycode;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.easymock.EasyMock;
@@ -10,8 +9,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertThat;
 
 public class WebRetrieverTest {
@@ -50,7 +51,6 @@ public class WebRetrieverTest {
                 "The next site's content",
                 "The last site's content"
         };
-        String allExpectedContent = StringUtils.join(expectedContent, '\n');
 
         WebRetriever sut = new WebRetriever() {
             int siteIndex = 0;
@@ -62,9 +62,9 @@ public class WebRetrieverTest {
         };
 
         String[] sites = {"site1", "site2", "site3"};
-        String allContent = sut.retrieve(sites);
+        List<String> allContent = sut.retrieve(sites);
 
-        assertThat(allContent, is(equalTo(allExpectedContent)));
+        assertArrayEquals(expectedContent, allContent.toArray());
     }
 
     @Test
@@ -125,9 +125,10 @@ public class WebRetrieverTest {
             }
         };
 
-        String content = sut.retrieve(args);
+        List<String> content = sut.retrieve(args);
 
-        assertThat(content, is(equalTo(expectedContent)));
+        assertThat(content.size(), is(1));
+        assertThat(content.get(0), is(equalTo(expectedContent)));
     }
 
     private HttpResponse createMockResponse(String expectedContent) throws IOException {

@@ -24,6 +24,22 @@ public class WebRetriever {
         this.httpClient = new DefaultHttpClient();
     }
 
+    public List<String> retrieve(String[] URIs) throws IOException, URISyntaxException {
+        List<String> content = new ArrayList<String>(URIs.length);
+        boolean writeToFile = false;
+
+        for (String URI : URIs) {
+            if ("-O".equals(URI)) {
+                writeToFile = true;
+                continue;
+            }
+            content.add(retrieve(URI, writeToFile));
+            writeToFile = false;
+        }
+
+        return content;
+    }
+
     public String retrieve(String URI, boolean writeToFile) throws IOException, URISyntaxException {
         HttpResponse response = retrieveResponse(URI);
 
@@ -33,6 +49,11 @@ public class WebRetriever {
     protected HttpResponse retrieveResponse(String URI) throws IOException, URISyntaxException {
         URI uri = rectifyURI(URI);
         return retrieveResponse(uri);
+    }
+
+    protected HttpResponse retrieveResponse(URI uri) throws IOException {
+        HttpGet httpGet = new HttpGet(uri);
+        return httpClient.execute(httpGet);
     }
 
     private URI rectifyURI(String URI) throws URISyntaxException {
@@ -50,11 +71,6 @@ public class WebRetriever {
         return "http".equals(scheme);
     }
 
-    protected HttpResponse retrieveResponse(URI uri) throws IOException {
-        HttpGet httpGet = new HttpGet(uri);
-        return httpClient.execute(httpGet);
-    }
-
     protected String extractContentFromResponse(HttpResponse response) throws IOException {
         HttpEntity entity = response.getEntity();
         InputStream content = entity.getContent();
@@ -63,26 +79,11 @@ public class WebRetriever {
         return writer.toString();
     }
 
-    public String retrieve(String[] URIs) throws IOException, URISyntaxException {
-        List<String> content = new ArrayList<String>(URIs.length);
-        boolean writeToFile = false;
-
-        for (String URI : URIs) {
-            if ("-O".equals(URI)) {
-                writeToFile = true;
-                continue;
-            }
-            content.add(retrieve(URI, writeToFile));
-            writeToFile = false;
-        }
-
-        return StringUtils.join(content, '\n');
-    }
-
     public static void main(String[] args) {
         WebRetriever retriever = new WebRetriever();
         try {
-            System.out.println(retriever.retrieve(args));
+            List<String> contents = retriever.retrieve(args);
+            System.out.println(StringUtils.join(contents, '\n'));
         } catch (IOException e) {
             System.err.println("Houston, we have a problem.");
             e.printStackTrace();
