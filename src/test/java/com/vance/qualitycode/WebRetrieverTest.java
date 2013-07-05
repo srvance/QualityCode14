@@ -38,9 +38,11 @@ public class WebRetrieverTest {
                 target.setResponse(createMockResponse(expectedContent));
             }
         };
+        WebRetriever.Target target = new WebRetriever.Target(EXAMPLE_URI, false);
 
-        String content = sut.retrieve(new WebRetriever.Target(EXAMPLE_URI, false));
+        sut.retrieve(target);
 
+        String content = target.getContent();
         assertThat(content, is(notNullValue()));
         assertThat(content, is(equalTo(expectedContent)));
     }
@@ -57,8 +59,9 @@ public class WebRetrieverTest {
             int siteIndex = 0;
 
             @Override
-            public String retrieve(Target target) throws IOException {
-                return expectedContent[siteIndex++];
+            public void retrieve(Target target) throws IOException {
+                String content = expectedContent[siteIndex++];
+                target.setContent(content);
             }
         };
 
@@ -84,9 +87,9 @@ public class WebRetrieverTest {
             }
 
             @Override
-            public String retrieve(Target target) throws IOException, URISyntaxException {
+            public void retrieve(Target target) throws IOException, URISyntaxException {
                 assertThat(++retrieveCount, is(equalTo(1)));
-                return super.retrieve(target);
+                super.retrieve(target);
             }
 
             @Override
@@ -95,10 +98,10 @@ public class WebRetrieverTest {
             }
 
             @Override
-            protected void emit(String content, boolean writeToFile) {
-                super.emit(content, writeToFile);
-                assertThat(content, is(expectedContent));
-                assertThat(writeToFile, is(true));
+            protected void emit(Target target) {
+                super.emit(target);
+                assertThat(target.getContent(), is(expectedContent));
+                assertThat(target.getOutputToFile(), is(true));
                 emitCount++;
             }
         };

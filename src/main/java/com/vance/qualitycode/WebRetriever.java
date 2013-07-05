@@ -35,22 +35,22 @@ public class WebRetriever {
                 continue;
             }
             currentTarget = new Target(URI, writeToFile);
-            String content = retrieve(currentTarget);
-            contents.add(content);
-            emit(content, writeToFile);
+            retrieve(currentTarget);
+            contents.add(currentTarget.getContent());
+            emit(currentTarget);
             writeToFile = false;
         }
 
         return contents;
     }
 
-    public String retrieve(Target target) throws IOException, URISyntaxException {
+    public void retrieve(Target target) throws IOException, URISyntaxException {
         retrieveResponse(target);
 
-        return target.extractContentFromResponse();
+        target.extractContentFromResponse();
     }
 
-    protected void emit(String content, boolean writeToFile) {
+    protected void emit(Target target) {
 
     }
 
@@ -81,6 +81,8 @@ public class WebRetriever {
         private final boolean outputToFile;
 
         private HttpResponse response;
+
+        private String content;
 
         Target(String original, boolean outputToFile) throws URISyntaxException {
             this.original = original;
@@ -125,11 +127,20 @@ public class WebRetriever {
             InputStream content = entity.getContent();
             StringWriter writer = new StringWriter();
             IOUtils.copy(content, writer);
-            return writer.toString();
+            this.content = writer.toString();
+            return this.content;
         }
 
         protected boolean getOutputToFile() {
             return outputToFile;
+        }
+
+        protected String getContent() {
+            return content;
+        }
+
+        protected void setContent(String content) {
+            this.content = content;
         }
     }
 }
