@@ -44,7 +44,7 @@ public class WebRetriever {
     }
 
     public String retrieve(Target target) throws IOException, URISyntaxException {
-        HttpResponse response = retrieveResponse(target.getOriginal());
+        HttpResponse response = retrieveResponse(target);
 
         return extractContentFromResponse(response);
     }
@@ -53,25 +53,10 @@ public class WebRetriever {
 
     }
 
-    protected HttpResponse retrieveResponse(String URI) throws IOException, URISyntaxException {
-        URI uri = rectifyURI(URI);
+    protected HttpResponse retrieveResponse(Target target) throws IOException, URISyntaxException {
+        URI uri = target.getUri();
         HttpGet httpGet = new HttpGet(uri);
         return httpClient.execute(httpGet);
-    }
-
-    protected URI rectifyURI(String URI) throws URISyntaxException {
-        URI uri = new URI(URI);
-        if (uri.getHost() == null) {
-            uri = new URI("http://" + URI);
-        }
-        if (!isSupportedScheme(uri.getScheme())) {
-            throw new IllegalArgumentException("Only http scheme is valid at this time");
-        }
-        return uri;
-    }
-
-    private boolean isSupportedScheme(String scheme) {
-        return "http".equals(scheme);
     }
 
     protected String extractContentFromResponse(HttpResponse response) throws IOException {
@@ -99,12 +84,34 @@ public class WebRetriever {
     static class Target {
         private final String original;
 
-        Target(String original) {
+        private final URI uri;
+
+        Target(String original) throws URISyntaxException {
             this.original = original;
+            uri = rectifyURI(original);
+        }
+
+        private URI rectifyURI(String URI) throws URISyntaxException {
+            URI uri = new URI(URI);
+            if (uri.getHost() == null) {
+                uri = new URI("http://" + URI);
+            }
+            if (!isSupportedScheme(uri.getScheme())) {
+                throw new IllegalArgumentException("Only http scheme is valid at this time");
+            }
+            return uri;
+        }
+
+        private boolean isSupportedScheme(String scheme) {
+            return "http".equals(scheme);
         }
 
         public String getOriginal() {
             return original;
+        }
+
+        protected URI getUri() {
+            return uri;
         }
     }
 }

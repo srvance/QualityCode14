@@ -34,7 +34,7 @@ public class WebRetrieverTest {
         final String expectedContent = "This is one set of content";
         WebRetriever sut = new WebRetriever() {
             @Override
-            protected HttpResponse retrieveResponse(String URI) throws IOException {
+            protected HttpResponse retrieveResponse(Target target) throws IOException {
                 return createMockResponse(expectedContent);
             }
         };
@@ -69,33 +69,6 @@ public class WebRetrieverTest {
     }
 
     @Test
-    public void testRetrieveResponse_SchemeDomain() throws IOException, URISyntaxException {
-        WebRetriever sut = new WebRetriever();
-
-        URI actualURI = sut.rectifyURI(EXAMPLE_URI);
-
-        assertThat(actualURI.getScheme(), is(equalTo(SCHEME_HTTP)));
-        assertThat(actualURI.getHost(), is(equalTo(EXAMPLE_DOMAIN)));
-    }
-
-    @Test
-    public void testRectifyURI_DomainOnly() throws IOException, URISyntaxException {
-        WebRetriever sut = new WebRetriever();
-
-        URI actualURI = sut.rectifyURI(EXAMPLE_DOMAIN);
-
-        assertThat(actualURI.getHost(), is(equalTo(EXAMPLE_DOMAIN)));
-        assertThat(actualURI.getScheme(), is(equalTo(SCHEME_HTTP)));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testRetrieveResponse_NonHttpScheme() throws IOException, URISyntaxException {
-        WebRetriever sut = new WebRetriever();
-
-        sut.rectifyURI("ftp://" + EXAMPLE_DOMAIN);
-    }
-
-    @Test
     public void testExtractContentFromResponse() throws IOException {
         String expectedContent = "This is another set of content";
         WebRetriever sut = new WebRetriever();
@@ -127,7 +100,7 @@ public class WebRetrieverTest {
             }
 
             @Override
-            protected HttpResponse retrieveResponse(String URI) throws IOException {
+            protected HttpResponse retrieveResponse(Target target) throws IOException {
                 return createMockResponse(expectedContent);
             }
 
@@ -144,6 +117,35 @@ public class WebRetrieverTest {
 
         assertThat(content.size(), is(1));
         assertThat(content.get(0), is(equalTo(expectedContent)));
+    }
+
+    @Test
+    public void testWebRetrieverTarget_SchemeDomain() throws IOException, URISyntaxException {
+        String expectedOriginal = EXAMPLE_URI;
+
+        WebRetriever.Target sut = new WebRetriever.Target(expectedOriginal);
+
+        assertThat(sut.getOriginal(), is(expectedOriginal));
+        URI actualURI = sut.getUri();
+        assertThat(actualURI.getScheme(), is(equalTo(SCHEME_HTTP)));
+        assertThat(actualURI.getHost(), is(equalTo(EXAMPLE_DOMAIN)));
+    }
+
+    @Test
+    public void testWebRetrieverTarget_DomainOnly() throws IOException, URISyntaxException {
+        String expectedOriginal = EXAMPLE_DOMAIN;
+
+        WebRetriever.Target sut = new WebRetriever.Target(expectedOriginal);
+
+        assertThat(sut.getOriginal(), is(expectedOriginal));
+        URI actualURI = sut.getUri();
+        assertThat(actualURI.getHost(), is(equalTo(expectedOriginal)));
+        assertThat(actualURI.getScheme(), is(equalTo(SCHEME_HTTP)));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testWebRetrieverTarget_NonHttpScheme() throws IOException, URISyntaxException {
+        new WebRetriever.Target("ftp://" + EXAMPLE_DOMAIN);
     }
 
     private HttpResponse createMockResponse(String expectedContent) throws IOException {
