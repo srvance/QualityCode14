@@ -34,8 +34,8 @@ public class WebRetrieverTest {
         final String expectedContent = "This is one set of content";
         WebRetriever sut = new WebRetriever() {
             @Override
-            protected HttpResponse retrieveResponse(Target target) throws IOException {
-                return createMockResponse(expectedContent);
+            protected void retrieveResponse(Target target) throws IOException {
+                target.setResponse(createMockResponse(expectedContent));
             }
         };
 
@@ -100,8 +100,8 @@ public class WebRetrieverTest {
             }
 
             @Override
-            protected HttpResponse retrieveResponse(Target target) throws IOException {
-                return createMockResponse(expectedContent);
+            protected void retrieveResponse(Target target) throws IOException {
+                target.setResponse(createMockResponse(expectedContent));
             }
 
             @Override
