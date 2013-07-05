@@ -69,16 +69,6 @@ public class WebRetrieverTest {
     }
 
     @Test
-    public void testExtractContentFromResponse() throws IOException {
-        String expectedContent = "This is another set of content";
-        WebRetriever sut = new WebRetriever();
-
-        String content = sut.extractContentFromResponse(createMockResponse(expectedContent));
-
-        assertThat(content, is(equalTo(expectedContent)));
-    }
-
-    @Test
     public void testRetrieve_SingleURLOutputToFile() throws IOException, URISyntaxException {
         final String expectedContent = "This content should go to a file";
         String[] args = {"-O", EXAMPLE_URI};
@@ -146,6 +136,17 @@ public class WebRetrieverTest {
     @Test(expected = IllegalArgumentException.class)
     public void testWebRetrieverTarget_NonHttpScheme() throws IOException, URISyntaxException {
         new WebRetriever.Target("ftp://" + EXAMPLE_DOMAIN);
+    }
+
+    @Test
+    public void testTargetExtractContentFromResponse() throws IOException, URISyntaxException {
+        String expectedContent = "This is another set of content";
+        WebRetriever.Target sut = new WebRetriever.Target(EXAMPLE_URI);
+        sut.setResponse(createMockResponse(expectedContent));
+
+        String content = sut.extractContentFromResponse();
+
+        assertThat(content, is(equalTo(expectedContent)));
     }
 
     private HttpResponse createMockResponse(String expectedContent) throws IOException {

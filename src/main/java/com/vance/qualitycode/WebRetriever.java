@@ -46,7 +46,7 @@ public class WebRetriever {
     public String retrieve(Target target) throws IOException, URISyntaxException {
         retrieveResponse(target);
 
-        return extractContentFromResponse(target.getResponse());
+        return target.extractContentFromResponse();
     }
 
     protected void emit(String content, boolean writeToFile) {
@@ -58,14 +58,6 @@ public class WebRetriever {
         HttpGet httpGet = new HttpGet(uri);
         HttpResponse response = httpClient.execute(httpGet);
         target.setResponse(response);
-    }
-
-    protected String extractContentFromResponse(HttpResponse response) throws IOException {
-        HttpEntity entity = response.getEntity();
-        InputStream content = entity.getContent();
-        StringWriter writer = new StringWriter();
-        IOUtils.copy(content, writer);
-        return writer.toString();
     }
 
     public static void main(String[] args) {
@@ -122,6 +114,15 @@ public class WebRetriever {
 
         void setResponse(HttpResponse response) {
             this.response = response;
+        }
+
+        protected String extractContentFromResponse() throws IOException {
+            HttpResponse response = getResponse();
+            HttpEntity entity = response.getEntity();
+            InputStream content = entity.getContent();
+            StringWriter writer = new StringWriter();
+            IOUtils.copy(content, writer);
+            return writer.toString();
         }
     }
 }
