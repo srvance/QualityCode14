@@ -38,7 +38,7 @@ public class WebRetrieverTest {
             }
         };
 
-        String content = sut.retrieve(EXAMPLE_URI, false);
+        String content = sut.retrieve(EXAMPLE_URI);
 
         assertThat(content, is(notNullValue()));
         assertThat(content, is(equalTo(expectedContent)));
@@ -56,7 +56,7 @@ public class WebRetrieverTest {
             int siteIndex = 0;
 
             @Override
-            public String retrieve(String URI, boolean writeToFile) throws IOException {
+            public String retrieve(String URI) throws IOException {
                 return expectedContent[siteIndex++];
             }
         };
@@ -114,9 +114,9 @@ public class WebRetrieverTest {
             int retrieveCount = 0;
 
             @Override
-            public String retrieve(String URI, boolean writeToFile) throws IOException, URISyntaxException {
+            public String retrieve(String URI) throws IOException, URISyntaxException {
                 assertThat(++retrieveCount, is(equalTo(1)));
-                return super.retrieve(URI, writeToFile);
+                return super.retrieve(URI);
             }
 
             @Override

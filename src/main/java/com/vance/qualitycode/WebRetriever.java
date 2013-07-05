@@ -33,14 +33,14 @@ public class WebRetriever {
                 writeToFile = true;
                 continue;
             }
-            content.add(retrieve(URI, writeToFile));
+            content.add(retrieve(URI));
             writeToFile = false;
         }
 
         return content;
     }
 
-    public String retrieve(String URI, boolean writeToFile) throws IOException, URISyntaxException {
+    public String retrieve(String URI) throws IOException, URISyntaxException {
         HttpResponse response = retrieveResponse(URI);
 
         return extractContentFromResponse(response);
