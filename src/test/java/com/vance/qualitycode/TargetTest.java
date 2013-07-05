@@ -10,10 +10,14 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 public class TargetTest {
+    public static final String SCHEME_HTTP = "http";
+    public static final String EXAMPLE_DOMAIN = "www.example.com";
+    public static final String EXAMPLE_URI = SCHEME_HTTP + "://" + EXAMPLE_DOMAIN;
+
     @Test
     public void testRetrieve_SingleTarget() throws IOException, URISyntaxException {
         final String expectedContent = "This is one set of content";
-        Target target = new Target(WebRetrieverTest.EXAMPLE_URI, false) {
+        Target target = new Target(EXAMPLE_URI, false) {
             @Override
             protected void retrieveResponse() throws IOException, URISyntaxException {
                 setResponse(WebRetrieverTest.createMockResponse(expectedContent));
@@ -29,20 +33,20 @@ public class TargetTest {
 
     @Test
     public void testWebRetrieverTarget_SchemeDomain() throws IOException, URISyntaxException {
-        String expectedOriginal = WebRetrieverTest.EXAMPLE_URI;
+        String expectedOriginal = EXAMPLE_URI;
 
         Target sut = new Target(expectedOriginal, false);
 
         assertThat(sut.getOriginal(), is(expectedOriginal));
         assertThat(sut.getOutputToFile(), is(false));
         URI actualURI = sut.getUri();
-        assertThat(actualURI.getScheme(), is(equalTo(WebRetrieverTest.SCHEME_HTTP)));
-        assertThat(actualURI.getHost(), is(equalTo(WebRetrieverTest.EXAMPLE_DOMAIN)));
+        assertThat(actualURI.getScheme(), is(equalTo(SCHEME_HTTP)));
+        assertThat(actualURI.getHost(), is(equalTo(EXAMPLE_DOMAIN)));
     }
 
     @Test
     public void testWebRetrieverTarget_DomainOnly() throws IOException, URISyntaxException {
-        String expectedOriginal = WebRetrieverTest.EXAMPLE_DOMAIN;
+        String expectedOriginal = EXAMPLE_DOMAIN;
 
         Target sut = new Target(expectedOriginal, false);
 
@@ -50,18 +54,18 @@ public class TargetTest {
         assertThat(sut.getOutputToFile(), is(false));
         URI actualURI = sut.getUri();
         assertThat(actualURI.getHost(), is(equalTo(expectedOriginal)));
-        assertThat(actualURI.getScheme(), is(equalTo(WebRetrieverTest.SCHEME_HTTP)));
+        assertThat(actualURI.getScheme(), is(equalTo(SCHEME_HTTP)));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testWebRetrieverTarget_NonHttpScheme() throws IOException, URISyntaxException {
-        new Target("ftp://" + WebRetrieverTest.EXAMPLE_DOMAIN, false);
+        new Target("ftp://" + EXAMPLE_DOMAIN, false);
     }
 
     @Test
     public void testTargetExtractContentFromResponse() throws IOException, URISyntaxException {
         String expectedContent = "This is another set of content";
-        Target sut = new Target(WebRetrieverTest.EXAMPLE_URI, false);
+        Target sut = new Target(EXAMPLE_URI, false);
         sut.setResponse(WebRetrieverTest.createMockResponse(expectedContent));
 
         String content = sut.extractContentFromResponse();

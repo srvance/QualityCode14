@@ -15,10 +15,6 @@ import static org.junit.Assert.*;
 
 public class WebRetrieverTest {
 
-    public static final String SCHEME_HTTP = "http";
-    public static final String EXAMPLE_DOMAIN = "www.example.com";
-    public static final String EXAMPLE_URI = SCHEME_HTTP + "://" + EXAMPLE_DOMAIN;
-
     @Test
     public void testWebRetriever() {
         WebRetriever sut = new WebRetriever();
@@ -58,7 +54,7 @@ public class WebRetrieverTest {
     @Test
     public void testRetrieve_SingleURLOutputToFile() throws IOException, URISyntaxException {
         final String expectedContent = "This content should go to a file";
-        String[] args = {"-O", EXAMPLE_URI};
+        String[] args = {"-O", TargetTest.EXAMPLE_URI};
         WebRetriever sut = new WebRetriever() {
             int retrieveCount = 0;
             int emitCount = 0;
