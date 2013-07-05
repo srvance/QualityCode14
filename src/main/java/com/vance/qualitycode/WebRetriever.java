@@ -25,7 +25,7 @@ public class WebRetriever {
     }
 
     public List<String> retrieve(String[] URIs) throws IOException, URISyntaxException {
-        List<String> content = new ArrayList<String>(URIs.length);
+        List<String> contents = new ArrayList<String>(URIs.length);
         boolean writeToFile = false;
 
         for (String URI : URIs) {
@@ -33,17 +33,23 @@ public class WebRetriever {
                 writeToFile = true;
                 continue;
             }
-            content.add(retrieve(URI));
+            String content = retrieve(URI);
+            contents.add(content);
+            emit(content, writeToFile);
             writeToFile = false;
         }
 
-        return content;
+        return contents;
     }
 
     public String retrieve(String URI) throws IOException, URISyntaxException {
         HttpResponse response = retrieveResponse(URI);
 
         return extractContentFromResponse(response);
+    }
+
+    protected void emit(String content, boolean writeToFile) {
+
     }
 
     protected HttpResponse retrieveResponse(String URI) throws IOException, URISyntaxException {

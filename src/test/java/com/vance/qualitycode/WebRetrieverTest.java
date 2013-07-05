@@ -133,7 +133,9 @@ public class WebRetrieverTest {
                 return createMockResponse(expectedContent);
             }
 
+            @Override
             protected void emit(String content, boolean writeToFile) {
+                super.emit(content, writeToFile);
                 assertThat(content, is(expectedContent));
                 assertThat(writeToFile, is(true));
                 emitCount++;
