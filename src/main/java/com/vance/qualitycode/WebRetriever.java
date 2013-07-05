@@ -19,7 +19,7 @@ public class WebRetriever {
                 writeToFile = true;
                 continue;
             }
-            currentTarget = createTarget(writeToFile, URI);
+            currentTarget = createTarget(URI, writeToFile);
             currentTarget.retrieve();
             contents.add(currentTarget.getContent());
             currentTarget.emit();
@@ -29,7 +29,7 @@ public class WebRetriever {
         return contents;
     }
 
-    protected Target createTarget(boolean writeToFile, String URI) throws URISyntaxException {
+    protected Target createTarget(String URI, boolean writeToFile) throws URISyntaxException {
         return new Target(URI, writeToFile);
     }
 

@@ -38,7 +38,7 @@ public class WebRetrieverTest {
             int siteIndex = 0;
 
             @Override
-            protected Target createTarget(boolean writeToFile, String URI) throws URISyntaxException {
+            protected Target createTarget(String URI, boolean writeToFile) throws URISyntaxException {
                 return new Target(URI, writeToFile) {
                     @Override
                     public void retrieve() throws IOException {
@@ -71,7 +71,7 @@ public class WebRetrieverTest {
             }
 
             @Override
-            protected Target createTarget(boolean writeToFile, String URI) throws URISyntaxException {
+            protected Target createTarget(String URI, boolean writeToFile) throws URISyntaxException {
                 return new Target(URI, writeToFile) {
                     @Override
                     public void retrieve() throws IOException, URISyntaxException {
