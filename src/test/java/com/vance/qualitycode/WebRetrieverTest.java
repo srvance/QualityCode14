@@ -27,24 +27,6 @@ public class WebRetrieverTest {
     }
 
     @Test
-    public void testRetrieve_SingleTarget() throws IOException, URISyntaxException {
-        final String expectedContent = "This is one set of content";
-        WebRetriever sut = new WebRetriever();
-        Target target = new Target(EXAMPLE_URI, false) {
-            @Override
-            protected void retrieveResponse() throws IOException, URISyntaxException {
-                setResponse(createMockResponse(expectedContent));
-            }
-        };
-
-        sut.retrieve(target);
-
-        String content = target.getContent();
-        assertThat(content, is(notNullValue()));
-        assertThat(content, is(equalTo(expectedContent)));
-    }
-
-    @Test
     public void testRetrieve_MultipleURIs() throws IOException, URISyntaxException {
         final String[] expectedContent = {
                 "The first site's content",
@@ -56,9 +38,14 @@ public class WebRetrieverTest {
             int siteIndex = 0;
 
             @Override
-            public void retrieve(Target target) throws IOException {
-                String content = expectedContent[siteIndex++];
-                target.setContent(content);
+            protected Target createTarget(boolean writeToFile, String URI) throws URISyntaxException {
+                return new Target(URI, writeToFile) {
+                    @Override
+                    public void retrieve() throws IOException {
+                        String content = expectedContent[siteIndex++];
+                        setContent(content);
+                    }
+                };
             }
         };
 
@@ -84,14 +71,14 @@ public class WebRetrieverTest {
             }
 
             @Override
-            public void retrieve(Target target) throws IOException, URISyntaxException {
-                assertThat(++retrieveCount, is(equalTo(1)));
-                super.retrieve(target);
-            }
-
-            @Override
             protected Target createTarget(boolean writeToFile, String URI) throws URISyntaxException {
                 return new Target(URI, writeToFile) {
+                    @Override
+                    public void retrieve() throws IOException, URISyntaxException {
+                        assertThat(++retrieveCount, is(equalTo(1)));
+                        super.retrieve();
+                    }
+
                     @Override
                     protected void retrieveResponse() throws IOException {
                         setResponse(createMockResponse(expectedContent));

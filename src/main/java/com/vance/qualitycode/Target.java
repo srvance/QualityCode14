@@ -92,4 +92,10 @@ class Target {
     protected void emit() {
 
     }
+
+    public void retrieve() throws IOException, URISyntaxException {
+        retrieveResponse();
+
+        extractContentFromResponse();
+    }
 }

@@ -11,6 +11,23 @@ import static org.junit.Assert.*;
 
 public class TargetTest {
     @Test
+    public void testRetrieve_SingleTarget() throws IOException, URISyntaxException {
+        final String expectedContent = "This is one set of content";
+        Target target = new Target(WebRetrieverTest.EXAMPLE_URI, false) {
+            @Override
+            protected void retrieveResponse() throws IOException, URISyntaxException {
+                setResponse(WebRetrieverTest.createMockResponse(expectedContent));
+            }
+        };
+
+        target.retrieve();
+
+        String content = target.getContent();
+        assertThat(content, is(notNullValue()));
+        assertThat(content, is(equalTo(expectedContent)));
+    }
+
+    @Test
     public void testWebRetrieverTarget_SchemeDomain() throws IOException, URISyntaxException {
         String expectedOriginal = WebRetrieverTest.EXAMPLE_URI;
 
