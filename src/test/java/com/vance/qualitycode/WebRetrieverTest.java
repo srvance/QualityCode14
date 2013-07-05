@@ -38,7 +38,7 @@ public class WebRetrieverTest {
                 target.setResponse(createMockResponse(expectedContent));
             }
         };
-        WebRetriever.Target target = new WebRetriever.Target(EXAMPLE_URI, false);
+        Target target = new Target(EXAMPLE_URI, false);
 
         sut.retrieve(target);
 
@@ -116,7 +116,7 @@ public class WebRetrieverTest {
     public void testWebRetrieverTarget_SchemeDomain() throws IOException, URISyntaxException {
         String expectedOriginal = EXAMPLE_URI;
 
-        WebRetriever.Target sut = new WebRetriever.Target(expectedOriginal, false);
+        Target sut = new Target(expectedOriginal, false);
 
         assertThat(sut.getOriginal(), is(expectedOriginal));
         assertThat(sut.getOutputToFile(), is(false));
@@ -129,7 +129,7 @@ public class WebRetrieverTest {
     public void testWebRetrieverTarget_DomainOnly() throws IOException, URISyntaxException {
         String expectedOriginal = EXAMPLE_DOMAIN;
 
-        WebRetriever.Target sut = new WebRetriever.Target(expectedOriginal, false);
+        Target sut = new Target(expectedOriginal, false);
 
         assertThat(sut.getOriginal(), is(expectedOriginal));
         assertThat(sut.getOutputToFile(), is(false));
@@ -140,13 +140,13 @@ public class WebRetrieverTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testWebRetrieverTarget_NonHttpScheme() throws IOException, URISyntaxException {
-        new WebRetriever.Target("ftp://" + EXAMPLE_DOMAIN, false);
+        new Target("ftp://" + EXAMPLE_DOMAIN, false);
     }
 
     @Test
     public void testTargetExtractContentFromResponse() throws IOException, URISyntaxException {
         String expectedContent = "This is another set of content";
-        WebRetriever.Target sut = new WebRetriever.Target(EXAMPLE_URI, false);
+        Target sut = new Target(EXAMPLE_URI, false);
         sut.setResponse(createMockResponse(expectedContent));
 
         String content = sut.extractContentFromResponse();
