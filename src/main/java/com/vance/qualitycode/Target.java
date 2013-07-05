@@ -33,6 +33,12 @@ class Target {
         uri = rectifyURI(original);
     }
 
+    public void retrieve() throws IOException, URISyntaxException {
+        retrieveResponse();
+
+        extractContentFromResponse();
+    }
+
     private URI rectifyURI(String URI) throws URISyntaxException {
         URI uri = new URI(URI);
         if (uri.getHost() == null) {
@@ -93,11 +99,5 @@ class Target {
 
     protected void emit() {
 
-    }
-
-    public void retrieve() throws IOException, URISyntaxException {
-        retrieveResponse();
-
-        extractContentFromResponse();
     }
 }
