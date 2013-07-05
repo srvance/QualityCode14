@@ -62,7 +62,7 @@ public class WebRetriever {
         return httpClient.execute(httpGet);
     }
 
-    private URI rectifyURI(String URI) throws URISyntaxException {
+    protected URI rectifyURI(String URI) throws URISyntaxException {
         URI uri = new URI(URI);
         if (uri.getHost() == null) {
             uri = new URI("http://" + URI);

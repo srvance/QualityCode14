@@ -70,31 +70,29 @@ public class WebRetrieverTest {
 
     @Test
     public void testRetrieveResponse_SchemeDomain() throws IOException, URISyntaxException {
-        WebRetrieverURISpy sut = new WebRetrieverURISpy();
+        WebRetriever sut = new WebRetriever();
 
-        sut.retrieveResponse(EXAMPLE_URI);
+        URI actualURI = sut.rectifyURI(EXAMPLE_URI);
 
-        URI actualURI = sut.getSuppliedURI();
         assertThat(actualURI.getScheme(), is(equalTo(SCHEME_HTTP)));
         assertThat(actualURI.getHost(), is(equalTo(EXAMPLE_DOMAIN)));
     }
 
     @Test
-    public void testRetrieveResponse_DomainOnly() throws IOException, URISyntaxException {
-        WebRetrieverURISpy sut = new WebRetrieverURISpy();
+    public void testRectifyURI_DomainOnly() throws IOException, URISyntaxException {
+        WebRetriever sut = new WebRetriever();
 
-        sut.retrieveResponse(EXAMPLE_DOMAIN);
+        URI actualURI = sut.rectifyURI(EXAMPLE_DOMAIN);
 
-        URI actualURI = sut.getSuppliedURI();
         assertThat(actualURI.getHost(), is(equalTo(EXAMPLE_DOMAIN)));
         assertThat(actualURI.getScheme(), is(equalTo(SCHEME_HTTP)));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testRetrieveResponse_NonHttpScheme() throws IOException, URISyntaxException {
-        WebRetrieverURISpy sut = new WebRetrieverURISpy();
+        WebRetriever sut = new WebRetriever();
 
-        sut.retrieveResponse("ftp://" + EXAMPLE_DOMAIN);
+        sut.rectifyURI("ftp://" + EXAMPLE_DOMAIN);
     }
 
     @Test
@@ -155,19 +153,5 @@ public class WebRetrieverTest {
         EasyMock.expect(entity.getContent()).andReturn(new ByteArrayInputStream(expectedContent.getBytes()));
         EasyMock.replay(response, entity);
         return response;
-    }
-
-    private class WebRetrieverURISpy extends WebRetriever {
-        URI suppliedURI;
-
-        @Override
-        protected HttpResponse retrieveResponse(URI uri) throws IOException {
-            this.suppliedURI = uri;
-            return createMockResponse("");
-        }
-
-        public URI getSuppliedURI() {
-            return suppliedURI;
-        }
     }
 }
