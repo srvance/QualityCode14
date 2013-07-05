@@ -127,7 +127,7 @@ public class WebRetrieverTest {
             }
 
             @Override
-            protected HttpResponse retrieveResponse(URI uri) throws IOException {
+            protected HttpResponse retrieveResponse(String URI) throws IOException {
                 return createMockResponse(expectedContent);
             }
 

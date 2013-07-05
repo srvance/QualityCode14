@@ -54,10 +54,6 @@ public class WebRetriever {
 
     protected HttpResponse retrieveResponse(String URI) throws IOException, URISyntaxException {
         URI uri = rectifyURI(URI);
-        return retrieveResponse(uri);
-    }
-
-    protected HttpResponse retrieveResponse(URI uri) throws IOException {
         HttpGet httpGet = new HttpGet(uri);
         return httpClient.execute(httpGet);
     }
