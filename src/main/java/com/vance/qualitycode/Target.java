@@ -14,6 +14,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 class Target {
+    public static final String SCHEME_HTTP = "http";
+
     private final String original;
     private final URI uri;
     private final boolean outputToFile;
@@ -34,7 +36,7 @@ class Target {
     private URI rectifyURI(String URI) throws URISyntaxException {
         URI uri = new URI(URI);
         if (uri.getHost() == null) {
-            uri = new URI("http://" + URI);
+            uri = new URI(SCHEME_HTTP + "://" + URI);
         }
         if (!isSupportedScheme(uri.getScheme())) {
             throw new IllegalArgumentException("Only http scheme is valid at this time");
@@ -43,7 +45,7 @@ class Target {
     }
 
     private boolean isSupportedScheme(String scheme) {
-        return "http".equals(scheme);
+        return SCHEME_HTTP.equals(scheme);
     }
 
     protected void retrieveResponse() throws IOException, URISyntaxException {

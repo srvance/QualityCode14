@@ -10,9 +10,8 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 public class TargetTest {
-    public static final String SCHEME_HTTP = "http";
     public static final String EXAMPLE_DOMAIN = "www.example.com";
-    public static final String EXAMPLE_URI = SCHEME_HTTP + "://" + EXAMPLE_DOMAIN;
+    public static final String EXAMPLE_URI = Target.SCHEME_HTTP + "://" + EXAMPLE_DOMAIN;
 
     @Test
     public void testRetrieve_SingleTarget() throws IOException, URISyntaxException {
@@ -40,7 +39,7 @@ public class TargetTest {
         assertThat(sut.getOriginal(), is(expectedOriginal));
         assertThat(sut.getOutputToFile(), is(false));
         URI actualURI = sut.getUri();
-        assertThat(actualURI.getScheme(), is(equalTo(SCHEME_HTTP)));
+        assertThat(actualURI.getScheme(), is(equalTo(Target.SCHEME_HTTP)));
         assertThat(actualURI.getHost(), is(equalTo(EXAMPLE_DOMAIN)));
     }
 
@@ -54,7 +53,7 @@ public class TargetTest {
         assertThat(sut.getOutputToFile(), is(false));
         URI actualURI = sut.getUri();
         assertThat(actualURI.getHost(), is(equalTo(expectedOriginal)));
-        assertThat(actualURI.getScheme(), is(equalTo(SCHEME_HTTP)));
+        assertThat(actualURI.getScheme(), is(equalTo(Target.SCHEME_HTTP)));
     }
 
     @Test(expected = IllegalArgumentException.class)
