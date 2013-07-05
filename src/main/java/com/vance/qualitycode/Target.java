@@ -88,4 +88,8 @@ class Target {
     protected void setContent(String content) {
         this.content = content;
     }
+
+    protected void emit() {
+
+    }
 }

@@ -22,7 +22,7 @@ public class WebRetriever {
             currentTarget = createTarget(writeToFile, URI);
             retrieve(currentTarget);
             contents.add(currentTarget.getContent());
-            emit(currentTarget);
+            currentTarget.emit();
             writeToFile = false;
         }
 
@@ -37,10 +37,6 @@ public class WebRetriever {
         target.retrieveResponse();
 
         target.extractContentFromResponse();
-    }
-
-    protected void emit(Target target) {
-
     }
 
     public static void main(String[] args) {

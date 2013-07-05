@@ -90,19 +90,19 @@ public class WebRetrieverTest {
             }
 
             @Override
-            protected void emit(Target target) {
-                super.emit(target);
-                assertThat(target.getContent(), is(expectedContent));
-                assertThat(target.getOutputToFile(), is(true));
-                emitCount++;
-            }
-
-            @Override
             protected Target createTarget(boolean writeToFile, String URI) throws URISyntaxException {
                 return new Target(URI, writeToFile) {
                     @Override
                     protected void retrieveResponse() throws IOException {
                         setResponse(createMockResponse(expectedContent));
+                    }
+
+                    @Override
+                    protected void emit() {
+                        super.emit();
+                        assertThat(getContent(), is(expectedContent));
+                        assertThat(getOutputToFile(), is(true));
+                        emitCount++;
                     }
 
                 };
