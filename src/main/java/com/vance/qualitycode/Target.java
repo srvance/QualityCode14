@@ -10,13 +10,6 @@ import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-/**
-* Created with IntelliJ IDEA.
-* User: srvance
-* Date: 7/5/13
-* Time: 17:57 PM
-* To change this template use File | Settings | File Templates.
-*/
 class Target {
     private final String original;
     private final URI uri;

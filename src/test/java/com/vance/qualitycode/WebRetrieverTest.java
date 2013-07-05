@@ -7,14 +7,11 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class WebRetrieverTest {
 
@@ -112,49 +109,7 @@ public class WebRetrieverTest {
         assertThat(content.get(0), is(equalTo(expectedContent)));
     }
 
-    @Test
-    public void testWebRetrieverTarget_SchemeDomain() throws IOException, URISyntaxException {
-        String expectedOriginal = EXAMPLE_URI;
-
-        Target sut = new Target(expectedOriginal, false);
-
-        assertThat(sut.getOriginal(), is(expectedOriginal));
-        assertThat(sut.getOutputToFile(), is(false));
-        URI actualURI = sut.getUri();
-        assertThat(actualURI.getScheme(), is(equalTo(SCHEME_HTTP)));
-        assertThat(actualURI.getHost(), is(equalTo(EXAMPLE_DOMAIN)));
-    }
-
-    @Test
-    public void testWebRetrieverTarget_DomainOnly() throws IOException, URISyntaxException {
-        String expectedOriginal = EXAMPLE_DOMAIN;
-
-        Target sut = new Target(expectedOriginal, false);
-
-        assertThat(sut.getOriginal(), is(expectedOriginal));
-        assertThat(sut.getOutputToFile(), is(false));
-        URI actualURI = sut.getUri();
-        assertThat(actualURI.getHost(), is(equalTo(expectedOriginal)));
-        assertThat(actualURI.getScheme(), is(equalTo(SCHEME_HTTP)));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testWebRetrieverTarget_NonHttpScheme() throws IOException, URISyntaxException {
-        new Target("ftp://" + EXAMPLE_DOMAIN, false);
-    }
-
-    @Test
-    public void testTargetExtractContentFromResponse() throws IOException, URISyntaxException {
-        String expectedContent = "This is another set of content";
-        Target sut = new Target(EXAMPLE_URI, false);
-        sut.setResponse(createMockResponse(expectedContent));
-
-        String content = sut.extractContentFromResponse();
-
-        assertThat(content, is(equalTo(expectedContent)));
-    }
-
-    private HttpResponse createMockResponse(String expectedContent) throws IOException {
+    protected static HttpResponse createMockResponse(String expectedContent) throws IOException {
         final HttpResponse response = EasyMock.createMock(HttpResponse.class);
         HttpEntity entity = EasyMock.createMock(HttpEntity.class);
         EasyMock.expect(response.getEntity()).andReturn(entity);
