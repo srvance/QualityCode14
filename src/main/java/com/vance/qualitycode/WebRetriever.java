@@ -33,7 +33,8 @@ public class WebRetriever {
                 writeToFile = true;
                 continue;
             }
-            String content = retrieve(URI);
+            Target target = new Target(URI);
+            String content = retrieve(target);
             contents.add(content);
             emit(content, writeToFile);
             writeToFile = false;
@@ -42,8 +43,8 @@ public class WebRetriever {
         return contents;
     }
 
-    public String retrieve(String URI) throws IOException, URISyntaxException {
-        HttpResponse response = retrieveResponse(URI);
+    public String retrieve(Target target) throws IOException, URISyntaxException {
+        HttpResponse response = retrieveResponse(target.getOriginal());
 
         return extractContentFromResponse(response);
     }
@@ -92,6 +93,18 @@ public class WebRetriever {
         } catch (URISyntaxException e) {
             System.err.println("Bad URL!");
             e.printStackTrace();
+        }
+    }
+
+    static class Target {
+        private final String original;
+
+        Target(String original) {
+            this.original = original;
+        }
+
+        public String getOriginal() {
+            return original;
         }
     }
 }

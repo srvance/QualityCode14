@@ -39,7 +39,7 @@ public class WebRetrieverTest {
             }
         };
 
-        String content = sut.retrieve(EXAMPLE_URI);
+        String content = sut.retrieve(new WebRetriever.Target(EXAMPLE_URI));
 
         assertThat(content, is(notNullValue()));
         assertThat(content, is(equalTo(expectedContent)));
@@ -57,7 +57,7 @@ public class WebRetrieverTest {
             int siteIndex = 0;
 
             @Override
-            public String retrieve(String URI) throws IOException {
+            public String retrieve(Target target) throws IOException {
                 return expectedContent[siteIndex++];
             }
         };
@@ -121,9 +121,9 @@ public class WebRetrieverTest {
             }
 
             @Override
-            public String retrieve(String URI) throws IOException, URISyntaxException {
+            public String retrieve(Target target) throws IOException, URISyntaxException {
                 assertThat(++retrieveCount, is(equalTo(1)));
-                return super.retrieve(URI);
+                return super.retrieve(target);
             }
 
             @Override
