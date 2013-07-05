@@ -14,6 +14,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class WebRetrieverTest {
 
@@ -112,6 +113,14 @@ public class WebRetrieverTest {
         String[] args = {"-O", EXAMPLE_URI};
         WebRetriever sut = new WebRetriever() {
             int retrieveCount = 0;
+            int emitCount = 0;
+
+            @Override
+            public List<String> retrieve(String[] URIs) throws IOException, URISyntaxException {
+                List<String> result = super.retrieve(URIs);
+                assertTrue(emitCount > 0);
+                return result;
+            }
 
             @Override
             public String retrieve(String URI) throws IOException, URISyntaxException {
@@ -122,6 +131,12 @@ public class WebRetrieverTest {
             @Override
             protected HttpResponse retrieveResponse(URI uri) throws IOException {
                 return createMockResponse(expectedContent);
+            }
+
+            protected void emit(String content, boolean writeToFile) {
+                assertThat(content, is(expectedContent));
+                assertThat(writeToFile, is(true));
+                emitCount++;
             }
         };
 
