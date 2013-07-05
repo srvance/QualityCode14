@@ -27,14 +27,15 @@ public class WebRetriever {
     public List<String> retrieve(String[] URIs) throws IOException, URISyntaxException {
         List<String> contents = new ArrayList<String>(URIs.length);
         boolean writeToFile = false;
+        Target currentTarget;
 
         for (String URI : URIs) {
             if ("-O".equals(URI)) {
                 writeToFile = true;
                 continue;
             }
-            Target target = new Target(URI);
-            String content = retrieve(target);
+            currentTarget = new Target(URI, writeToFile);
+            String content = retrieve(currentTarget);
             contents.add(content);
             emit(content, writeToFile);
             writeToFile = false;
@@ -77,11 +78,13 @@ public class WebRetriever {
     static class Target {
         private final String original;
         private final URI uri;
+        private final boolean outputToFile;
 
         private HttpResponse response;
 
-        Target(String original) throws URISyntaxException {
+        Target(String original, boolean outputToFile) throws URISyntaxException {
             this.original = original;
+            this.outputToFile = outputToFile;
             uri = rectifyURI(original);
         }
 
@@ -123,6 +126,10 @@ public class WebRetriever {
             StringWriter writer = new StringWriter();
             IOUtils.copy(content, writer);
             return writer.toString();
+        }
+
+        protected boolean getOutputToFile() {
+            return outputToFile;
         }
     }
 }
