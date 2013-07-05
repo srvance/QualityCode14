@@ -3,6 +3,9 @@ package com.vance.qualitycode;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +17,7 @@ class Target {
     private final String original;
     private final URI uri;
     private final boolean outputToFile;
+    private final HttpClient httpClient;
 
     private HttpResponse response;
 
@@ -22,6 +26,8 @@ class Target {
     Target(String original, boolean outputToFile) throws URISyntaxException {
         this.original = original;
         this.outputToFile = outputToFile;
+        this.httpClient = new DefaultHttpClient();
+
         uri = rectifyURI(original);
     }
 
@@ -38,6 +44,11 @@ class Target {
 
     private boolean isSupportedScheme(String scheme) {
         return "http".equals(scheme);
+    }
+
+    protected void retrieveResponse() throws IOException, URISyntaxException {
+        HttpGet httpGet = new HttpGet(uri);
+        response = httpClient.execute(httpGet);
     }
 
     protected String extractContentFromResponse() throws IOException {

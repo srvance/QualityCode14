@@ -29,13 +29,13 @@ public class WebRetrieverTest {
     @Test
     public void testRetrieve_SingleTarget() throws IOException, URISyntaxException {
         final String expectedContent = "This is one set of content";
-        WebRetriever sut = new WebRetriever() {
+        WebRetriever sut = new WebRetriever();
+        Target target = new Target(EXAMPLE_URI, false) {
             @Override
-            protected void retrieveResponse(Target target) throws IOException {
-                target.setResponse(createMockResponse(expectedContent));
+            protected void retrieveResponse() throws IOException, URISyntaxException {
+                setResponse(createMockResponse(expectedContent));
             }
         };
-        Target target = new Target(EXAMPLE_URI, false);
 
         sut.retrieve(target);
 
@@ -90,16 +90,22 @@ public class WebRetrieverTest {
             }
 
             @Override
-            protected void retrieveResponse(Target target) throws IOException {
-                target.setResponse(createMockResponse(expectedContent));
-            }
-
-            @Override
             protected void emit(Target target) {
                 super.emit(target);
                 assertThat(target.getContent(), is(expectedContent));
                 assertThat(target.getOutputToFile(), is(true));
                 emitCount++;
+            }
+
+            @Override
+            protected Target createTarget(boolean writeToFile, String URI) throws URISyntaxException {
+                return new Target(URI, writeToFile) {
+                    @Override
+                    protected void retrieveResponse() throws IOException {
+                        setResponse(createMockResponse(expectedContent));
+                    }
+
+                };
             }
         };
 

@@ -1,24 +1,13 @@
 package com.vance.qualitycode;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class WebRetriever {
-
-    private final HttpClient httpClient;
-
-    public WebRetriever() {
-        this.httpClient = new DefaultHttpClient();
-    }
 
     public List<String> retrieve(String[] URIs) throws IOException, URISyntaxException {
         List<String> contents = new ArrayList<String>(URIs.length);
@@ -30,7 +19,7 @@ public class WebRetriever {
                 writeToFile = true;
                 continue;
             }
-            currentTarget = new Target(URI, writeToFile);
+            currentTarget = createTarget(writeToFile, URI);
             retrieve(currentTarget);
             contents.add(currentTarget.getContent());
             emit(currentTarget);
@@ -40,21 +29,18 @@ public class WebRetriever {
         return contents;
     }
 
+    protected Target createTarget(boolean writeToFile, String URI) throws URISyntaxException {
+        return new Target(URI, writeToFile);
+    }
+
     public void retrieve(Target target) throws IOException, URISyntaxException {
-        retrieveResponse(target);
+        target.retrieveResponse();
 
         target.extractContentFromResponse();
     }
 
     protected void emit(Target target) {
 
-    }
-
-    protected void retrieveResponse(Target target) throws IOException, URISyntaxException {
-        URI uri = target.getUri();
-        HttpGet httpGet = new HttpGet(uri);
-        HttpResponse response = httpClient.execute(httpGet);
-        target.setResponse(response);
     }
 
     public static void main(String[] args) {
