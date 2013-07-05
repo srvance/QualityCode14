@@ -40,6 +40,16 @@ class Target {
         return "http".equals(scheme);
     }
 
+    protected String extractContentFromResponse() throws IOException {
+        HttpResponse response = getResponse();
+        HttpEntity entity = response.getEntity();
+        InputStream content = entity.getContent();
+        StringWriter writer = new StringWriter();
+        IOUtils.copy(content, writer);
+        this.content = writer.toString();
+        return this.content;
+    }
+
     public String getOriginal() {
         return original;
     }
@@ -54,16 +64,6 @@ class Target {
 
     void setResponse(HttpResponse response) {
         this.response = response;
-    }
-
-    protected String extractContentFromResponse() throws IOException {
-        HttpResponse response = getResponse();
-        HttpEntity entity = response.getEntity();
-        InputStream content = entity.getContent();
-        StringWriter writer = new StringWriter();
-        IOUtils.copy(content, writer);
-        this.content = writer.toString();
-        return this.content;
     }
 
     protected boolean getOutputToFile() {
