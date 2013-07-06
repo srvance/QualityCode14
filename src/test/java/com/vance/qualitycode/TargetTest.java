@@ -89,28 +89,34 @@ public class TargetTest {
 
     @Test
     public void testRetrieve_StandardOutput() throws IOException, URISyntaxException {
-        final String expectedContent = "This should go to stdout";
-        Target sut = new Target(EXAMPLE_URI, false) {
-            boolean copiedToOutput = false;
-
-            @Override
-            public void retrieve() throws IOException, URISyntaxException {
-                super.retrieve();
-                assertThat(copiedToOutput, is(true));
-            }
-
-            @Override
-            protected void retrieveResponse() throws IOException, URISyntaxException {
-                setResponse(WebRetrieverTest.createMockResponse(expectedContent));
-            }
-
-            @Override
-            protected void copyToOutput(InputStream content, OutputStream output) throws IOException {
-                assertThat(System.out, is(output));
-                copiedToOutput = true;
-            }
-        };
+        OutputSpyTarget sut = new OutputSpyTarget(EXAMPLE_URI, false);
 
         sut.retrieve();
+
+        OutputStream outputStream = sut.getOutputStream();
+        assertThat(outputStream, is(notNullValue()));
+        assertThat(System.out, is(outputStream));
+    }
+
+    class OutputSpyTarget extends Target {
+        OutputStream outputStream = null;
+
+        public OutputSpyTarget(String URI, boolean writeToFile) throws URISyntaxException {
+            super(URI, writeToFile);
+        }
+
+        @Override
+        protected void retrieveResponse() throws IOException, URISyntaxException {
+            setResponse(WebRetrieverTest.createMockResponse(""));
+        }
+
+        @Override
+        protected void copyToOutput(InputStream content, OutputStream output) throws IOException {
+            outputStream = output;
+        }
+
+        OutputStream getOutputStream() {
+            return outputStream;
+        }
     }
 }
