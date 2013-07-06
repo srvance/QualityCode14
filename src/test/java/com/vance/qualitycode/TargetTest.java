@@ -2,7 +2,9 @@ package com.vance.qualitycode;
 
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -16,16 +18,22 @@ public class TargetTest {
     @Test
     public void testRetrieve_SingleTarget() throws IOException, URISyntaxException {
         final String expectedContent = "This is one set of content";
+        final OutputStream outputStream = new ByteArrayOutputStream();
         Target target = new Target(EXAMPLE_URI, false) {
             @Override
             protected void retrieveResponse() throws IOException, URISyntaxException {
                 setResponse(WebRetrieverTest.createMockResponse(expectedContent));
             }
+
+            @Override
+            protected OutputStream determineOutputStream() {
+                return outputStream;
+            }
         };
 
         target.retrieve();
 
-        String content = target.getContent();
+        String content = outputStream.toString();
         assertThat(content, is(notNullValue()));
         assertThat(content, is(equalTo(expectedContent)));
     }
@@ -62,13 +70,19 @@ public class TargetTest {
     }
 
     @Test
-    public void testTargetExtractContentFromResponse() throws IOException, URISyntaxException {
+    public void testExtractContentFromResponse() throws IOException, URISyntaxException {
         String expectedContent = "This is another set of content";
-        Target sut = new Target(EXAMPLE_URI, false);
+        final OutputStream outputStream = new ByteArrayOutputStream();
+        Target sut = new Target(EXAMPLE_URI, false) {
+            @Override
+            protected OutputStream determineOutputStream() {
+                return outputStream;
+            }
+        };
         sut.setResponse(WebRetrieverTest.createMockResponse(expectedContent));
 
         sut.extractContentFromResponse();
 
-        assertThat(sut.getContent(), is(equalTo(expectedContent)));
+        assertThat(outputStream.toString(), is(equalTo(expectedContent)));
     }
 }

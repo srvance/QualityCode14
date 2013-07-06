@@ -1,16 +1,11 @@
 package com.vance.qualitycode;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class WebRetriever {
 
-    public List<String> retrieve(String[] URIs) throws IOException, URISyntaxException {
-        List<String> contents = new ArrayList<String>(URIs.length);
+    public void retrieve(String[] URIs) throws IOException, URISyntaxException {
         boolean writeToFile = false;
         Target currentTarget;
 
@@ -21,12 +16,9 @@ public class WebRetriever {
             }
             currentTarget = createTarget(URI, writeToFile);
             currentTarget.retrieve();
-            contents.add(currentTarget.getContent());
             currentTarget.emit();
             writeToFile = false;
         }
-
-        return contents;
     }
 
     protected Target createTarget(String URI, boolean writeToFile) throws URISyntaxException {
@@ -36,8 +28,7 @@ public class WebRetriever {
     public static void main(String[] args) {
         WebRetriever retriever = new WebRetriever();
         try {
-            List<String> contents = retriever.retrieve(args);
-            System.out.println(StringUtils.join(contents, '\n'));
+            retriever.retrieve(args);
         } catch (IOException e) {
             System.err.println("Houston, we have a problem.");
             e.printStackTrace();

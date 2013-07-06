@@ -1,17 +1,20 @@
 package com.vance.qualitycode;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class WebRetrieverTest {
 
@@ -29,6 +32,7 @@ public class WebRetrieverTest {
                 "The next site's content",
                 "The last site's content"
         };
+        final OutputStream outputStream = new ByteArrayOutputStream();
 
         WebRetriever sut = new WebRetriever() {
             int siteIndex = 0;
@@ -37,33 +41,37 @@ public class WebRetrieverTest {
             protected Target createTarget(String URI, boolean writeToFile) throws URISyntaxException {
                 return new Target(URI, writeToFile) {
                     @Override
-                    public void retrieve() throws IOException {
-                        String content = expectedContent[siteIndex++];
-                        setContent(content);
+                    protected void retrieveResponse() throws IOException, URISyntaxException {
+                        setResponse(createMockResponse(expectedContent[siteIndex++]));
+                    }
+
+                    @Override
+                    protected OutputStream determineOutputStream() {
+                        return outputStream;
                     }
                 };
             }
         };
 
         String[] sites = {"site1", "site2", "site3"};
-        List<String> allContent = sut.retrieve(sites);
+        sut.retrieve(sites);
 
-        assertArrayEquals(expectedContent, allContent.toArray());
+        assertThat(outputStream.toString(), is(equalTo(StringUtils.join(expectedContent, ""))));
     }
 
     @Test
     public void testRetrieve_SingleURLOutputToFile() throws IOException, URISyntaxException {
         final String expectedContent = "This content should go to a file";
+        final OutputStream outputStream = new ByteArrayOutputStream();
         String[] args = {"-O", TargetTest.EXAMPLE_URI};
         WebRetriever sut = new WebRetriever() {
             int retrieveCount = 0;
             int emitCount = 0;
 
             @Override
-            public List<String> retrieve(String[] URIs) throws IOException, URISyntaxException {
-                List<String> result = super.retrieve(URIs);
+            public void retrieve(String[] URIs) throws IOException, URISyntaxException {
+                super.retrieve(URIs);
                 assertTrue(emitCount > 0);
-                return result;
             }
 
             @Override
@@ -83,19 +91,21 @@ public class WebRetrieverTest {
                     @Override
                     protected void emit() {
                         super.emit();
-                        assertThat(getContent(), is(expectedContent));
                         assertThat(getOutputToFile(), is(true));
                         emitCount++;
                     }
 
+                    @Override
+                    protected OutputStream determineOutputStream() {
+                        return outputStream;
+                    }
                 };
             }
         };
 
-        List<String> content = sut.retrieve(args);
+        sut.retrieve(args);
 
-        assertThat(content.size(), is(1));
-        assertThat(content.get(0), is(equalTo(expectedContent)));
+        assertThat(outputStream.toString(), is(equalTo(expectedContent)));
     }
 
     protected static HttpResponse createMockResponse(String expectedContent) throws IOException {

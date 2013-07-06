@@ -21,8 +21,6 @@ class Target {
 
     private HttpResponse response;
 
-    private String content;
-
     Target(String original, boolean outputToFile) throws URISyntaxException {
         this.original = original;
         this.outputToFile = outputToFile;
@@ -61,7 +59,6 @@ class Target {
         InputStream content = extractContentInputStream();
         OutputStream output = determineOutputStream();
         copyToOutput(content, output);
-        this.content = output.toString();
     }
 
     private InputStream extractContentInputStream() throws IOException {
@@ -73,8 +70,8 @@ class Target {
         IOUtils.copy(content, output);
     }
 
-    private OutputStream determineOutputStream() {
-        return new ByteArrayOutputStream();
+    protected OutputStream determineOutputStream() {
+        return System.out;
     }
 
     protected void emit() {
@@ -95,13 +92,5 @@ class Target {
 
     protected boolean getOutputToFile() {
         return outputToFile;
-    }
-
-    protected String getContent() {
-        return content;
-    }
-
-    protected void setContent(String content) {
-        this.content = content;
     }
 }
