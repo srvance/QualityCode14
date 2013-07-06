@@ -32,7 +32,7 @@ class Target {
     public void retrieve() throws IOException, URISyntaxException {
         retrieveResponse();
 
-        extractContentFromResponse();
+        emit();
     }
 
     private URI rectifyURI(String URI) throws URISyntaxException {
@@ -55,12 +55,6 @@ class Target {
         response = httpClient.execute(httpGet);
     }
 
-    protected void extractContentFromResponse() throws IOException {
-        InputStream content = extractContentInputStream();
-        OutputStream output = determineOutputStream();
-        copyToOutput(content, output);
-    }
-
     private InputStream extractContentInputStream() throws IOException {
         HttpEntity entity = response.getEntity();
         return entity.getContent();
@@ -74,8 +68,10 @@ class Target {
         return System.out;
     }
 
-    protected void emit() {
-
+    protected void emit() throws IOException {
+        InputStream content = extractContentInputStream();
+        OutputStream output = determineOutputStream();
+        copyToOutput(content, output);
     }
 
     public String getOriginal() {

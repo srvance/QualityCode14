@@ -16,10 +16,10 @@ public class TargetTest {
     public static final String EXAMPLE_URI = Target.SCHEME_HTTP + "://" + EXAMPLE_DOMAIN;
 
     @Test
-    public void testRetrieve_SingleTarget() throws IOException, URISyntaxException {
+    public void testRetrieve() throws IOException, URISyntaxException {
         final String expectedContent = "This is one set of content";
         final OutputStream outputStream = new ByteArrayOutputStream();
-        Target target = new Target(EXAMPLE_URI, false) {
+        Target sut = new Target(EXAMPLE_URI, false) {
             @Override
             protected void retrieveResponse() throws IOException, URISyntaxException {
                 setResponse(WebRetrieverTest.createMockResponse(expectedContent));
@@ -31,7 +31,7 @@ public class TargetTest {
             }
         };
 
-        target.retrieve();
+        sut.retrieve();
 
         String content = outputStream.toString();
         assertThat(content, is(notNullValue()));
@@ -39,7 +39,7 @@ public class TargetTest {
     }
 
     @Test
-    public void testWebRetrieverTarget_SchemeDomain() throws IOException, URISyntaxException {
+    public void testTarget_SchemeDomain() throws IOException, URISyntaxException {
         String expectedOriginal = EXAMPLE_URI;
 
         Target sut = new Target(expectedOriginal, false);
@@ -52,7 +52,7 @@ public class TargetTest {
     }
 
     @Test
-    public void testWebRetrieverTarget_DomainOnly() throws IOException, URISyntaxException {
+    public void testTarget_DomainOnly() throws IOException, URISyntaxException {
         String expectedOriginal = EXAMPLE_DOMAIN;
 
         Target sut = new Target(expectedOriginal, false);
@@ -65,12 +65,12 @@ public class TargetTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testWebRetrieverTarget_NonHttpScheme() throws IOException, URISyntaxException {
+    public void testTarget_NonHttpScheme() throws IOException, URISyntaxException {
         new Target("ftp://" + EXAMPLE_DOMAIN, false);
     }
 
     @Test
-    public void testExtractContentFromResponse() throws IOException, URISyntaxException {
+    public void testEmit() throws IOException, URISyntaxException {
         String expectedContent = "This is another set of content";
         final OutputStream outputStream = new ByteArrayOutputStream();
         Target sut = new Target(EXAMPLE_URI, false) {
@@ -81,7 +81,7 @@ public class TargetTest {
         };
         sut.setResponse(WebRetrieverTest.createMockResponse(expectedContent));
 
-        sut.extractContentFromResponse();
+        sut.emit();
 
         assertThat(outputStream.toString(), is(equalTo(expectedContent)));
     }

@@ -16,7 +16,6 @@ public class WebRetriever {
             }
             currentTarget = createTarget(URI, writeToFile);
             currentTarget.retrieve();
-            currentTarget.emit();
             writeToFile = false;
         }
     }

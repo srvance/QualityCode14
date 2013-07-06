@@ -89,7 +89,7 @@ public class WebRetrieverTest {
                     }
 
                     @Override
-                    protected void emit() {
+                    protected void emit() throws IOException {
                         super.emit();
                         assertThat(getOutputToFile(), is(true));
                         emitCount++;
