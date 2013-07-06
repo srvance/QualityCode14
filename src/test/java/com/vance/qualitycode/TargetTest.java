@@ -2,10 +2,7 @@ package com.vance.qualitycode;
 
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -109,6 +106,7 @@ public class TargetTest {
         OutputStream outputStream = sut.getOutputStream();
         assertThat(outputStream, is(notNullValue()));
         assertThat(System.out, is(not(outputStream)));
+        assertThat(outputStream, is(instanceOf(FileOutputStream.class)));
     }
 
     class OutputSpyTarget extends Target {

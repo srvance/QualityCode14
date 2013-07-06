@@ -64,8 +64,18 @@ class Target {
         IOUtils.copy(content, output);
     }
 
-    protected OutputStream determineOutputStream() {
+    protected OutputStream determineOutputStream() throws FileNotFoundException {
+        if (outputToFile) {
+            return createFileOutputStream();
+        }
         return System.out;
+    }
+
+    private OutputStream createFileOutputStream() throws FileNotFoundException {
+        String uriPath = uri.getPath();
+        String[] pathComponents = uriPath.split("/");
+        String fileName = pathComponents[pathComponents.length - 1];
+        return new FileOutputStream(fileName, false);
     }
 
     protected void emit() throws IOException {
