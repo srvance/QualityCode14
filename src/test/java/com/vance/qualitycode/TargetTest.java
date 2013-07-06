@@ -98,6 +98,17 @@ public class TargetTest {
         assertThat(System.out, is(outputStream));
     }
 
+    @Test
+    public void testRetrieve_FileOutput() throws URISyntaxException, IOException {
+        OutputSpyTarget sut = new OutputSpyTarget(EXAMPLE_URI, true);
+
+        sut.retrieve();
+
+        OutputStream outputStream = sut.getOutputStream();
+        assertThat(outputStream, is(notNullValue()));
+        assertThat(System.out, is(not(outputStream)));
+    }
+
     class OutputSpyTarget extends Target {
         OutputStream outputStream = null;
 
