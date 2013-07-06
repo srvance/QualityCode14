@@ -60,7 +60,6 @@ class Target {
     }
 
     protected String extractContentFromResponse() throws IOException {
-        HttpResponse response = getResponse();
         HttpEntity entity = response.getEntity();
         InputStream content = entity.getContent();
         StringWriter writer = new StringWriter();
@@ -69,16 +68,16 @@ class Target {
         return this.content;
     }
 
+    protected void emit() {
+
+    }
+
     public String getOriginal() {
         return original;
     }
 
     protected URI getUri() {
         return uri;
-    }
-
-    HttpResponse getResponse() {
-        return response;
     }
 
     void setResponse(HttpResponse response) {
@@ -95,9 +94,5 @@ class Target {
 
     protected void setContent(String content) {
         this.content = content;
-    }
-
-    protected void emit() {
-
     }
 }
