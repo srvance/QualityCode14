@@ -7,7 +7,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class TargetTest {
     public static final String EXAMPLE_DOMAIN = "www.example.com";
@@ -67,8 +67,8 @@ public class TargetTest {
         Target sut = new Target(EXAMPLE_URI, false);
         sut.setResponse(WebRetrieverTest.createMockResponse(expectedContent));
 
-        String content = sut.extractContentFromResponse();
+        sut.extractContentFromResponse();
 
-        assertThat(content, is(equalTo(expectedContent)));
+        assertThat(sut.getContent(), is(equalTo(expectedContent)));
     }
 }

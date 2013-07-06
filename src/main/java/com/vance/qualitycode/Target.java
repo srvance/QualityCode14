@@ -59,13 +59,12 @@ class Target {
         response = httpClient.execute(httpGet);
     }
 
-    protected String extractContentFromResponse() throws IOException {
+    protected void extractContentFromResponse() throws IOException {
         HttpEntity entity = response.getEntity();
         InputStream content = entity.getContent();
         StringWriter writer = new StringWriter();
         IOUtils.copy(content, writer);
         this.content = writer.toString();
-        return this.content;
     }
 
     protected void emit() {
