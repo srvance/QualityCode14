@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -84,5 +85,32 @@ public class TargetTest {
         sut.emit();
 
         assertThat(outputStream.toString(), is(equalTo(expectedContent)));
+    }
+
+    @Test
+    public void testRetrieve_StandardOutput() throws IOException, URISyntaxException {
+        final String expectedContent = "This should go to stdout";
+        Target sut = new Target(EXAMPLE_URI, false) {
+            boolean copiedToOutput = false;
+
+            @Override
+            public void retrieve() throws IOException, URISyntaxException {
+                super.retrieve();
+                assertThat(copiedToOutput, is(true));
+            }
+
+            @Override
+            protected void retrieveResponse() throws IOException, URISyntaxException {
+                setResponse(WebRetrieverTest.createMockResponse(expectedContent));
+            }
+
+            @Override
+            protected void copyToOutput(InputStream content, OutputStream output) throws IOException {
+                assertThat(System.out, is(output));
+                copiedToOutput = true;
+            }
+        };
+
+        sut.retrieve();
     }
 }
