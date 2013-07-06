@@ -109,6 +109,13 @@ public class TargetTest {
         assertThat(outputStream, is(instanceOf(FileOutputStream.class)));
     }
 
+    @Test(expected = FileNotFoundException.class)
+    public void testRetrieve_FileOutputNoFileName() throws URISyntaxException, IOException {
+        OutputSpyTarget sut = new OutputSpyTarget(EXAMPLE_URI, true);
+
+        sut.retrieve();
+    }
+
     class OutputSpyTarget extends Target {
         OutputStream outputStream = null;
 
