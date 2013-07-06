@@ -7,9 +7,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -60,11 +58,23 @@ class Target {
     }
 
     protected void extractContentFromResponse() throws IOException {
+        InputStream content = extractContentInputStream();
+        OutputStream output = determineOutputStream();
+        copyToOutput(content, output);
+        this.content = output.toString();
+    }
+
+    private InputStream extractContentInputStream() throws IOException {
         HttpEntity entity = response.getEntity();
-        InputStream content = entity.getContent();
-        StringWriter writer = new StringWriter();
-        IOUtils.copy(content, writer);
-        this.content = writer.toString();
+        return entity.getContent();
+    }
+
+    protected void copyToOutput(InputStream content, OutputStream output) throws IOException {
+        IOUtils.copy(content, output);
+    }
+
+    private OutputStream determineOutputStream() {
+        return new ByteArrayOutputStream();
     }
 
     protected void emit() {
