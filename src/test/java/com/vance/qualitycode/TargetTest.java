@@ -14,7 +14,9 @@ import static org.junit.Assert.assertThat;
 
 public class TargetTest {
     public static final String EXAMPLE_DOMAIN = "www.example.com";
+    public static final String INDEX_FILE = "index.html";
     public static final String EXAMPLE_URI = Target.SCHEME_HTTP + "://" + EXAMPLE_DOMAIN;
+    public static final String EXAMPLE_URI_WITH_PATH = EXAMPLE_URI + "/" + INDEX_FILE;
 
     @Test
     public void testRetrieve() throws IOException, URISyntaxException {
@@ -100,7 +102,7 @@ public class TargetTest {
 
     @Test
     public void testRetrieve_FileOutput() throws URISyntaxException, IOException {
-        OutputSpyTarget sut = new OutputSpyTarget(EXAMPLE_URI, true);
+        OutputSpyTarget sut = new OutputSpyTarget(EXAMPLE_URI_WITH_PATH, true);
 
         sut.retrieve();
 
